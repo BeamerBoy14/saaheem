@@ -1,10 +1,10 @@
 # Fichier utilisé par le VPS — les images viennent de GHCR, pas d'un build local.
-# Variables attendues : APP_IMAGE, NGINX_IMAGE, APP_KEY, APP_URL, DOMAIN
+# Variables attendues : APP_KEY, APP_URL, DOMAIN
 
 services:
 
   app:
-    image: ${APP_IMAGE}
+    image: ghcr.io/beamerboy14/saaheem-app:latest
     restart: unless-stopped
     environment:
       APP_NAME: SAAHEEM
@@ -25,7 +25,7 @@ services:
       - backend
 
   nginx:
-    image: ${NGINX_IMAGE}
+    image: ghcr.io/beamerboy14/saaheem-nginx:latest
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

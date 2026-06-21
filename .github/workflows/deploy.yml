@@ -59,8 +59,6 @@ jobs:
           project-name: saaheem
           docker-compose-path: docker-compose.prod.yml
           environment-variables: |
-            APP_IMAGE=ghcr.io/beamerboy14/saaheem-app:latest
-            NGINX_IMAGE=ghcr.io/beamerboy14/saaheem-nginx:latest
             APP_KEY=${{ secrets.APP_KEY }}
             APP_URL=https://saaheem.com
             DOMAIN=saaheem.com

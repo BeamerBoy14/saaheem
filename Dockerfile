@@ -39,7 +39,8 @@ COPY --from=node-build /app/public/build ./public/build
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-RUN php artisan package:discover --ansi \
+RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions storage/logs \
+    && php artisan package:discover --ansi \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache

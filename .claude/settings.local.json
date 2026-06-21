@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"c:\\\\laragon\\\\www\\\\Saaheem\\\\app\" -Recurse | Select-Object FullName, PSIsContainer | Where-Object { $_.PSIsContainer -eq $false } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\laragon\\\\www\\\\Saaheem\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem \"c:\\\\laragon\\\\www\\\\Saaheem\\\\lang\" -Recurse | Where-Object { $_.PSIsContainer -eq $false } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\laragon\\\\www\\\\Saaheem\\\\\", \"\"\\) })"
+    ]
+  }
+}

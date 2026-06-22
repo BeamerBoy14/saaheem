@@ -45,7 +45,11 @@ RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/s
     && php artisan route:cache \
     && php artisan view:cache
 
+COPY docker/php/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 9000
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
 
 

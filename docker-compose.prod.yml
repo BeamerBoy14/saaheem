@@ -1,8 +1,4 @@
-# Fichier utilisé par le VPS — les images viennent de GHCR, pas d'un build local.
-# Variables attendues : APP_KEY, APP_URL, DOMAIN
-
 services:
-
   app:
     image: ghcr.io/beamerboy14/saaheem-app:latest
     restart: unless-stopped
@@ -29,7 +25,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.saaheem.rule=Host(`${DOMAIN}`,`www.${DOMAIN}`)"
+      - "traefik.http.routers.saaheem.rule=Host(`saaheem.com`) || Host(`www.saaheem.com`)"
       - "traefik.http.routers.saaheem.entrypoints=websecure"
       - "traefik.http.routers.saaheem.tls.certresolver=letsencrypt"
       - "traefik.http.services.saaheem.loadbalancer.server.port=80"

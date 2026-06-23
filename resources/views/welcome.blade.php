@@ -473,7 +473,7 @@
     <section class="hero" id="accueil">
         <div class="hero__media" aria-hidden="true">
             <video id="hero-video" autoplay muted loop playsinline poster="">
-                <source src="{{ asset('bk.mp4') }}" type="video/mp4">
+                <source src="{{ asset('videos/bk.mp4') }}" type="video/mp4">
             </video>
         </div>
         <div class="hero__overlay"></div>

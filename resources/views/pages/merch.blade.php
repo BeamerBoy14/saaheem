@@ -146,7 +146,7 @@
         <section class="merch-hero" aria-labelledby="merch-hero-title">
             <div class="merch-hero__media" aria-hidden="true">
                 <video id="merch-video" autoplay muted loop playsinline>
-                    <source src="{{ asset('bk.mp4') }}" type="video/mp4">
+                    <source src="{{ asset('videos/bk.mp4') }}" type="video/mp4">
                 </video>
             </div>
             <div class="merch-hero__overlay" aria-hidden="true"></div>

@@ -376,7 +376,7 @@
                 height: 100%;
                 scroll-snap-align: start;
                 justify-content: flex-start;
-                padding: 1rem 0.5rem 1rem;
+                padding: 2.5rem 0.5rem 1rem;
             }
         }
 

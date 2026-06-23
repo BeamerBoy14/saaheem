@@ -128,8 +128,8 @@
 
     @media (max-width: 640px) {
         body, button, input, textarea, select {
-            font-size: 9px;
-            line-height: 2;
+            font-size: 10px;
+            line-height: 1.6;
         }
     }
 </style>

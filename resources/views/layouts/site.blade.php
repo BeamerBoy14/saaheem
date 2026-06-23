@@ -89,7 +89,15 @@
             gap: 0.65rem;
             align-items: center;
         }
-        .socials a { color: var(--black); opacity: .85; }
+        .socials a {
+            color: var(--black);
+            opacity: .85;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .socials a:hover { opacity: 1; color: var(--magenta); }
         .socials svg { width: 18px; height: 18px; display: block; }
         .btn-outline {
@@ -112,7 +120,7 @@
             color: var(--white);
         }
         .header-auth {
-            font-size: clamp(9px, 1.02vw, 11px);
+            font-size: clamp(10px, 1.02vw, 11px);
             font-weight: 600;
         }
         .header-auth a { color: var(--grey-text); text-decoration: none; margin-left: 0.65rem; }
@@ -170,7 +178,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.15rem;
-            font-size: clamp(9px, 1.02vw, 11px);
+            font-size: clamp(10px, 1.02vw, 11px);
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -180,6 +188,11 @@
             text-decoration: none;
             color: inherit;
             opacity: 0.5;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 0.34rem 0.47rem;
             border-radius: 2px;
             transition: opacity 0.15s ease, color 0.15s ease;

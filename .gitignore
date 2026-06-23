@@ -5,6 +5,7 @@
 /public/storage
 /public/photos
 /public/videos
+/public/bk.mp4
 /storage/*.key
 /vendor
 .env

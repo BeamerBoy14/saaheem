@@ -59,11 +59,9 @@
             .moments-masonry { columns: 3; }
         }
         @media (max-width: 720px) {
-            .moments-masonry { columns: 2; column-gap: 0.75rem; }
-            .moments-section { width: calc(100% - 1rem); }
-        }
-        @media (max-width: 420px) {
-            .moments-masonry { columns: 1; }
+            .moments-masonry { columns: 2; column-gap: 0.5rem; }
+            .moments-section { width: calc(100% - 0.75rem); }
+            .moments-masonry__item { margin-bottom: 0.5rem; border-radius: 8px; }
         }
         .moments-masonry__item {
             margin: 0 0 1rem;
@@ -74,12 +72,19 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .moments-masonry__item:hover {
-            transform: translateY(-3px);
+        @media (hover: hover) {
+            .moments-masonry__item:hover {
+                transform: translateY(-3px);
+                box-shadow:
+                    0 16px 40px rgba(0, 0, 0, 0.45),
+                    0 0 0 1px rgba(228, 0, 124, 0.35),
+                    0 0 24px rgba(228, 0, 124, 0.15);
+            }
+        }
+        .moments-masonry__item:active {
             box-shadow:
-                0 16px 40px rgba(0, 0, 0, 0.45),
-                0 0 0 1px rgba(228, 0, 124, 0.35),
-                0 0 24px rgba(228, 0, 124, 0.15);
+                0 0 0 1px rgba(228, 0, 124, 0.5),
+                0 0 24px rgba(228, 0, 124, 0.25);
         }
         .moments-masonry__media {
             display: block;

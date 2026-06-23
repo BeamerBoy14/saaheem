@@ -120,6 +120,9 @@
         @media (prefers-reduced-motion: reduce) {
             .about-bg__video { display: none; }
         }
+        @media (max-width: 720px) {
+            .about-bg { position: absolute; }
+        }
         .about-page__grid {
             position: relative;
             z-index: 2;
@@ -138,10 +141,35 @@
             .about-page__visual { grid-column: 1 / -1; max-width: 420px; margin: 0 auto; }
         }
         @media (max-width: 720px) {
-            .about-page__grid {
-                grid-template-columns: 1fr;
-            }
+            .about-page__grid { grid-template-columns: 1fr; }
             .about-timeline { display: none; }
+            .about-page__visual { order: -1; }
+            .about-copy-col { max-width: 100%; width: 100%; }
+            .about-copy {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 100%;
+                max-width: 100%;
+                width: 100%;
+                height: auto;
+                overflow-x: scroll;
+                overflow-y: visible;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            .about-slides__track {
+                display: contents;
+            }
+            .about-slide {
+                width: 100%;
+                height: auto;
+                min-height: 0;
+                scroll-snap-align: start;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding: 1rem 0.5rem 2.5rem;
+                box-sizing: border-box;
+            }
         }
 
         .about-timeline {
@@ -241,41 +269,27 @@
             max-width: 34rem;
             --slide-h: var(--about-block-h);
             height: var(--slide-h);
-            position: relative;
-            overflow: hidden;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .about-copy::-webkit-scrollbar { display: none; }
         .about-slides__track {
             position: relative;
-            height: var(--slide-h);
         }
         .about-slide {
-            position: absolute;
-            inset: 0;
             height: var(--slide-h);
             display: flex;
             flex-direction: column;
             justify-content: center;
             padding: 1.25rem 0;
             box-sizing: border-box;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: translateY(14px);
-            transition:
-                opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-                visibility 0.45s;
-        }
-        .about-slide.is-active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translateY(0);
-            z-index: 1;
+            scroll-snap-align: start;
         }
         @media (prefers-reduced-motion: reduce) {
-            .about-timeline__marker,
-            .about-slide { transition: none; }
+            .about-timeline__marker { transition: none; }
         }
 
         .about-copy--mobile-nav {
@@ -456,6 +470,18 @@
             --r: -6deg;
             color: #fff;
         }
+        @media (max-width: 720px) {
+            .about-tape--visionary { right: 0; }
+            .about-tape--curious { right: 0; }
+            .about-sticker { bottom: 0; left: 0; }
+            .about-drag-hint { display: none; }
+            .about-visual { padding: 0; margin: 0; }
+            .about-card {
+                aspect-ratio: 4 / 3;
+                max-height: 260px;
+                margin: 0 auto;
+            }
+        }
 
         .about-sticker {
             position: absolute;
@@ -633,82 +659,103 @@
 @push('scripts')
     <script>
         (function () {
-            var timeline = document.getElementById('about-timeline');
-            var marker = document.getElementById('about-timeline-marker');
-            var track = document.getElementById('about-slides-track');
-            var copy = document.getElementById('about-copy');
+            var timeline  = document.getElementById('about-timeline');
+            var marker    = document.getElementById('about-timeline-marker');
+            var track     = document.getElementById('about-slides-track');
+            var copy      = document.getElementById('about-copy');
             var mobileTabsHost = document.querySelector('[data-about-tabs-mobile]');
-            var cardImg = document.getElementById('about-card-img');
+            var cardImg   = document.getElementById('about-card-img');
             var stepImages = @json($stepImages ?? []);
+            var questions  = ['Who is Saaheem?', 'Vision & style', 'Live energy', 'Join the wave'];
             var currentStep = 0;
+            var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            function getButtons() {
-                return document.querySelectorAll('.about-timeline__btn[data-step]');
+            function isMobile() {
+                return window.matchMedia('(max-width: 720px)').matches;
             }
 
             function stepOffset(index) {
-                var body = timeline.querySelector('.about-timeline__body');
+                if (!timeline || !marker) return 0;
+                var body  = timeline.querySelector('.about-timeline__body');
                 var steps = timeline.querySelector('.about-timeline__steps');
-                var btn = steps && steps.querySelector('.about-timeline__btn[data-step="' + index + '"]');
-                var markerEl = document.getElementById('about-timeline-marker');
-                if (!btn || !body || !markerEl) return 0;
-                var btnRect = btn.getBoundingClientRect();
+                var btn   = steps && steps.querySelector('.about-timeline__btn[data-step="' + index + '"]');
+                if (!btn || !body) return 0;
+                var btnRect  = btn.getBoundingClientRect();
                 var bodyRect = body.getBoundingClientRect();
-                var markerTop = parseFloat(getComputedStyle(markerEl).top) || 0;
-                var markerH = markerEl.offsetHeight;
-                return btnRect.top - bodyRect.top + (btnRect.height - markerH) / 2 - markerTop;
+                var markerTop = parseFloat(getComputedStyle(marker).top) || 0;
+                return btnRect.top - bodyRect.top + (btnRect.height - marker.offsetHeight) / 2 - markerTop;
             }
 
             function syncMarker(index) {
-                if (!marker) return;
-                marker.style.setProperty('--marker-y', stepOffset(index) + 'px');
+                if (marker) marker.style.setProperty('--marker-y', stepOffset(index) + 'px');
             }
 
-            function setStep(next) {
-                if (next < 0 || next > 3) return;
-                var changed = next !== currentStep;
-
-                syncMarker(next);
-
-                if (!changed) return;
-
-                currentStep = next;
-
-                getButtons().forEach(function (btn) {
-                    var i = parseInt(btn.getAttribute('data-step'), 10);
-                    var on = i === next;
+            function syncButtons(index) {
+                document.querySelectorAll('.about-timeline__btn[data-step]').forEach(function (btn) {
+                    var on = parseInt(btn.getAttribute('data-step'), 10) === index;
                     btn.classList.toggle('is-active', on);
                     btn.setAttribute('aria-selected', on ? 'true' : 'false');
                 });
+            }
 
-                if (track) {
-                    track.querySelectorAll('.about-slide').forEach(function (panel, i) {
-                        var active = i === next;
-                        panel.classList.toggle('is-active', active);
-                        panel.setAttribute('aria-hidden', active ? 'false' : 'true');
-                    });
-                }
-
-                var questions = ['Who is Saaheem?', 'Vision & style', 'Live energy', 'Join the wave'];
+            function swapCard(index) {
                 var q = document.querySelector('.about-card__question');
-                if (q && questions[next]) q.textContent = questions[next];
-
-                if (cardImg && stepImages[next] && cardImg.src !== stepImages[next]) {
+                if (q && questions[index]) q.textContent = questions[index];
+                if (cardImg && stepImages[index] && cardImg.src !== stepImages[index]) {
                     cardImg.classList.add('is-swapping');
-                    window.setTimeout(function () {
-                        cardImg.src = stepImages[next];
-                        cardImg.onload = function () {
-                            cardImg.classList.remove('is-swapping');
-                            cardImg.onload = null;
-                        };
+                    setTimeout(function () {
+                        cardImg.src = stepImages[index];
+                        cardImg.onload = function () { cardImg.classList.remove('is-swapping'); cardImg.onload = null; };
                     }, 200);
                 }
             }
 
-            if (timeline && marker) {
+            function scrollToSlide(index) {
+                if (!copy) return;
+                var behavior = reducedMotion ? 'instant' : 'smooth';
+                if (isMobile()) {
+                    copy.scrollTo({ left: index * copy.clientWidth, behavior: behavior });
+                } else {
+                    copy.scrollTo({ top: index * copy.clientHeight, behavior: behavior });
+                }
+            }
+
+            function goToStep(index) {
+                index = Math.max(0, Math.min(3, index));
+                currentStep = index;
+                syncMarker(index);
+                syncButtons(index);
+                swapCard(index);
+                scrollToSlide(index);
+            }
+
+            /* Sync UI when user scrolls/swipes manually */
+            if (copy) {
+                var ticking = false;
+                copy.addEventListener('scroll', function () {
+                    if (ticking) return;
+                    ticking = true;
+                    requestAnimationFrame(function () {
+                        ticking = false;
+                        var index = isMobile()
+                            ? Math.round(copy.scrollLeft / Math.max(1, copy.clientWidth))
+                            : Math.round(copy.scrollTop  / Math.max(1, copy.clientHeight));
+                        index = Math.max(0, Math.min(3, index));
+                        if (index !== currentStep) {
+                            currentStep = index;
+                            syncMarker(index);
+                            syncButtons(index);
+                            swapCard(index);
+                        }
+                    });
+                });
+            }
+
+            /* Buttons (desktop timeline + mobile dots) */
+            if (timeline) {
                 if (mobileTabsHost && !mobileTabsHost.dataset.ready) {
                     mobileTabsHost.dataset.ready = '1';
-                    getButtons().forEach(function (btn) {
+                    document.querySelectorAll('#about-timeline .about-timeline__btn[data-step]').forEach(function (btn) {
                         var li = document.createElement('li');
                         var clone = btn.cloneNode(true);
                         clone.removeAttribute('id');
@@ -721,70 +768,38 @@
                     if (btn.dataset.bound) return;
                     btn.dataset.bound = '1';
                     btn.addEventListener('click', function () {
-                        setStep(parseInt(btn.getAttribute('data-step'), 10));
+                        goToStep(parseInt(btn.getAttribute('data-step'), 10));
                     });
                 });
-
-                setStep(0);
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                        syncMarker(currentStep);
-                    });
-                });
-                window.addEventListener('resize', function () {
-                    syncMarker(currentStep);
-                });
+                syncMarker(0);
+                syncButtons(0);
+                requestAnimationFrame(function () { requestAnimationFrame(function () { syncMarker(0); }); });
+                window.addEventListener('resize', function () { syncMarker(currentStep); });
             }
 
+            /* Card drag */
             var card = document.getElementById('about-card');
             if (!card) return;
-
-            var dragging = false;
-            var startX = 0, startY = 0;
-            var offsetX = 0, offsetY = 0;
+            var dragging = false, startX = 0, startY = 0, offsetX = 0, offsetY = 0;
 
             function setPos(x, y) {
-                offsetX = x;
-                offsetY = y;
+                offsetX = x; offsetY = y;
                 card.style.setProperty('--drag-x', x + 'px');
                 card.style.setProperty('--drag-y', y + 'px');
             }
-
-            function onDown(clientX, clientY) {
-                dragging = true;
-                card.classList.add('is-dragging');
-                startX = clientX - offsetX;
-                startY = clientY - offsetY;
-            }
-
-            function onMove(clientX, clientY) {
+            function onDown(cx, cy) { dragging = true; card.classList.add('is-dragging'); startX = cx - offsetX; startY = cy - offsetY; }
+            function onMove(cx, cy) {
                 if (!dragging) return;
-                var x = clientX - startX;
-                var y = clientY - startY;
                 var max = 48;
-                setPos(Math.max(-max, Math.min(max, x)), Math.max(-max, Math.min(max, y)));
+                setPos(Math.max(-max, Math.min(max, cx - startX)), Math.max(-max, Math.min(max, cy - startY)));
             }
+            function onUp() { if (!dragging) return; dragging = false; card.classList.remove('is-dragging'); }
 
-            function onUp() {
-                dragging = false;
-                card.classList.remove('is-dragging');
-            }
-
-            card.addEventListener('mousedown', function (e) {
-                e.preventDefault();
-                onDown(e.clientX, e.clientY);
-            });
+            card.addEventListener('mousedown', function (e) { e.preventDefault(); onDown(e.clientX, e.clientY); });
             window.addEventListener('mousemove', function (e) { onMove(e.clientX, e.clientY); });
             window.addEventListener('mouseup', onUp);
-
-            card.addEventListener('touchstart', function (e) {
-                if (e.touches.length !== 1) return;
-                onDown(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
-            window.addEventListener('touchmove', function (e) {
-                if (!dragging || e.touches.length !== 1) return;
-                onMove(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
+            card.addEventListener('touchstart', function (e) { if (e.touches.length === 1) onDown(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+            window.addEventListener('touchmove',  function (e) { if (dragging && e.touches.length === 1) onMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
             window.addEventListener('touchend', onUp);
         })();
     </script>

@@ -107,14 +107,49 @@ Route::get('/moments', function () {
         );
     }
 
-    $media = $media
-        ->sortByDesc('mtime')
-        ->values()
-        ->all();
+    // Sépare photos et vidéos, mélange chaque groupe
+    $videos = $media->filter(fn ($m) => $m['type'] === 'video')->shuffle()->values();
+    $photos = $media->filter(fn ($m) => $m['type'] === 'image')->shuffle()->values();
+
+    // Intercale les vidéos parmi les photos pour qu'aucune vidéo ne soit adjacente
+    $result = [];
+    $vIdx   = 0;
+    $pIdx   = 0;
+    $total  = $videos->count() + $photos->count();
+    $lastWasVideo = false;
+
+    while (count($result) < $total) {
+        $videosLeft = $vIdx < $videos->count();
+        $photosLeft = $pIdx < $photos->count();
+
+        if ($lastWasVideo || !$videosLeft) {
+            // Force une photo après chaque vidéo
+            if ($photosLeft) {
+                $result[] = $photos[$pIdx++];
+                $lastWasVideo = false;
+            } else {
+                // Plus de photos, on place les vidéos restantes une par une séparées si possible
+                $result[] = $videos[$vIdx++];
+                $lastWasVideo = true;
+            }
+        } else {
+            // Alterne aléatoirement photo/vidéo (33 % de chance de placer une vidéo)
+            if ($videosLeft && $photosLeft && rand(0, 2) === 0) {
+                $result[] = $videos[$vIdx++];
+                $lastWasVideo = true;
+            } elseif ($photosLeft) {
+                $result[] = $photos[$pIdx++];
+                $lastWasVideo = false;
+            } else {
+                $result[] = $videos[$vIdx++];
+                $lastWasVideo = true;
+            }
+        }
+    }
 
     return view('pages.moments', [
         'activeNav' => 'moments',
-        'media' => $media,
+        'media' => $result,
     ]);
 })->name('moments');
 

@@ -83,15 +83,15 @@
         color: transparent;
     }
 
-    .about-timeline__steps .about-timeline__btn {
+    .about-timeline__steps .about-timeline__btn,
+    .about-timeline__steps .about-timeline__btn .about-timeline__dot,
+    .about-timeline__steps .about-timeline__btn .about-timeline__label {
         background-image: none;
         -webkit-text-fill-color: currentColor;
-        color: rgba(255, 255, 255, 0.4);
     }
 
-    .about-timeline__steps .about-timeline__btn.is-active,
-    .about-timeline__steps .about-timeline__btn.is-active:hover,
-    .about-copy--mobile-nav .about-timeline__btn.is-active {
+    .about-timeline__steps .about-timeline__btn.is-active .about-timeline__dot,
+    .about-copy--mobile-nav .about-timeline__btn.is-active .about-timeline__dot {
         background-image: none;
         -webkit-text-fill-color: #0a0a0a;
         color: #0a0a0a;

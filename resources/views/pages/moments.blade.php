@@ -166,6 +166,18 @@
     <script>
         (function () {
             document.querySelectorAll('.moments-masonry__item--video video').forEach(function (video) {
+                var item = video.closest('.moments-masonry__item');
+
+                // Cache l'élément si la vidéo ne peut pas se charger
+                video.addEventListener('error', function () {
+                    if (item) item.style.display = 'none';
+                });
+
+                // Cache l'élément si après 3s la vidéo n'a toujours aucune donnée
+                setTimeout(function () {
+                    if (video.readyState === 0 && item) item.style.display = 'none';
+                }, 3000);
+
                 var play = function () {
                     video.play().catch(function () {});
                 };

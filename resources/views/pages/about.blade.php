@@ -168,7 +168,7 @@
             .about-timeline { display: none; }
 
             /* Carte : hauteur adaptative, max 38% de l'écran */
-            .about-page__visual { order: -1; flex-shrink: 0; margin-bottom: 1.25rem; }
+            .about-page__visual { order: -1; flex-shrink: 0; margin-bottom: 3rem; }
             .about-copy-col { max-width: 100%; width: 100%; flex: 1; min-height: 0; }
             .about-copy {
                 width: 100%;

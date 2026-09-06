@@ -1,6 +1,7 @@
 services:
   app:
     image: ghcr.io/beamerboy14/saaheem-app:latest
+    pull_policy: always
     restart: unless-stopped
     environment:
       APP_NAME: SAAHEEM
@@ -13,6 +14,11 @@ services:
       CACHE_DRIVER: file
       SESSION_DRIVER: file
       QUEUE_CONNECTION: sync
+      MAIL_MAILER: ${MAIL_MAILER}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      CONTACT_EMAIL: ${CONTACT_EMAIL}
     volumes:
       - media_photos:/var/www/html/public/photos
       - media_videos:/var/www/html/public/videos
@@ -22,6 +28,7 @@ services:
 
   nginx:
     image: ghcr.io/beamerboy14/saaheem-nginx:latest
+    pull_policy: always
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

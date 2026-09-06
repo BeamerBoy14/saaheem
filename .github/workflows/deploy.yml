@@ -62,3 +62,8 @@ jobs:
             APP_KEY=${{ secrets.APP_KEY }}
             APP_URL=https://saaheem.com
             DOMAIN=saaheem.com
+            MAIL_MAILER=resend
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+            MAIL_FROM_ADDRESS=noreply@saaheem.com
+            MAIL_FROM_NAME=SAAHEEM
+            CONTACT_EMAIL=saaheem@outlook.com

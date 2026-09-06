@@ -163,8 +163,28 @@
         .btn-letsgo {
             margin-top: clamp(1.25rem, 4vw, 2rem);
             cursor: pointer;
-            font-family: inherit;
+            font-family: var(--font-retro);
+            font-size: clamp(2rem, 11vw, 8rem);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            box-shadow: none;
+            background-image: none;
+            -webkit-text-fill-color: #fff;
+            color: #fff;
+            display: block;
+            width: 100%;
+            text-align: center;
+            animation: gms-pulse 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(228,0,124,0.8));
+            padding: 0.5rem 0;
+            margin-top: clamp(2rem, 8vh, 5rem);
+            line-height: 1.15;
+            word-break: break-word;
         }
+        .btn-letsgo::before { content: '▶'; font-size: 2rem; color: var(--magenta); -webkit-text-fill-color: var(--magenta); background-image: none; margin-right: 0.5rem; }
+        .btn-letsgo::after  { content: '◀'; font-size: 2rem; color: var(--magenta); -webkit-text-fill-color: var(--magenta); background-image: none; margin-left: 0.5rem; }
         .btn-letsgo.is-dismissed {
             opacity: 0;
             visibility: hidden;
@@ -174,6 +194,7 @@
             padding-bottom: 0;
             max-height: 0;
             overflow: hidden;
+            animation: none;
         }
         .hero-nav {
             margin-top: clamp(1rem, 3vw, 1.5rem);
@@ -466,6 +487,124 @@
             color: var(--white);
         }
 
+        /* ── Game Mode Select ── */
+        .gms {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .gms__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: clamp(0.6rem, 2vw, 1rem);
+        }
+        .gms__label {
+            font-family: var(--font-retro);
+            font-size: clamp(0.42rem, 1.3vw, 0.52rem);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.38);
+            -webkit-text-fill-color: rgba(255,255,255,0.38);
+            background-image: none;
+            margin: 0;
+        }
+        .gms__weird-link {
+            font-family: var(--font-retro);
+            font-size: clamp(0.42rem, 1.3vw, 0.52rem);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            background-image: var(--retro-fire);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
+            transition: filter 0.2s;
+        }
+        .gms__weird-link:hover { filter: brightness(1.25) drop-shadow(0 0 8px rgba(255,80,0,0.5)); }
+        .gms__weird-link::after { display: none; }
+        .gms__display {
+            min-height: clamp(2.8rem, 9vw, 4.5rem);
+            display: flex;
+            align-items: center;
+            padding-left: 0.75rem;
+            margin-bottom: clamp(0.4rem, 1.5vw, 0.75rem);
+        }
+        .gms__display-text {
+            font-family: var(--font-retro);
+            font-size: clamp(2rem, 12vw, 5rem);
+            background-image: var(--retro-chrome);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.7));
+            line-height: 1.2;
+            transition: opacity 0.12s ease;
+        }
+        .gms__display-text.is-hidden { opacity: 0; animation: none; }
+        .gms__display-text:not(.is-hidden) {
+            animation: gms-pulse 1.2s ease-in-out infinite;
+        }
+        .gms__list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .gms__item {
+            font-family: var(--font-retro);
+            font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,255,255,0.48);
+            -webkit-text-fill-color: rgba(255,255,255,0.48);
+            background-image: none;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: color 0.15s, -webkit-text-fill-color 0.15s;
+        }
+        .gms__item::before,
+        .gms__item::after {
+            content: '▶';
+            font-size: 1rem;
+            color: var(--magenta);
+            opacity: 0;
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .gms__item::after {
+            content: '◀';
+        }
+        .gms__item:hover,
+        .gms__item:focus-visible,
+        .gms__item.is-highlighted {
+            color: rgba(255,255,255,0.95);
+            -webkit-text-fill-color: rgba(255,255,255,0.95);
+        }
+        .gms__item:hover::before,
+        .gms__item:hover::after,
+        .gms__item:focus-visible::before,
+        .gms__item:focus-visible::after,
+        .gms__item.is-highlighted::before,
+        .gms__item.is-highlighted::after { opacity: 1; }
+
+        @keyframes gms-pulse {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(228,0,124,0.6)); }
+            50%       { opacity: 0.55; filter: drop-shadow(0 0 2px rgba(228,0,124,0.2)); }
+        }
+        .gms__item.is-highlighted {
+            animation: gms-pulse 1.2s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .gms__item.is-highlighted { animation: none; }
+        }
+
     </style>
 </head>
 <body class="page-home">
@@ -499,14 +638,22 @@
                 <span class="hero-weird__tile"><span class="hero-weird__letter">R</span></span>
                 <span class="hero-weird__tile"><span class="hero-weird__letter">D</span></span>
             </div>
-            <button type="button" class="btn-letsgo hero-text-link" id="btn-letsgo" aria-expanded="false" aria-controls="hero-nav">{{ __('site.home.lets_go') }}</button>
+            <button type="button" class="btn-letsgo" id="btn-letsgo" aria-expanded="false" aria-controls="hero-nav">{{ __('site.home.lets_go') }}</button>
             <nav class="hero-nav" id="hero-nav" aria-label="{{ __('site.nav.main') }}" aria-hidden="true">
-                <ul class="hero-nav__list" id="hero-nav-list">
-                    <li><a class="hero-text-link" href="{{ route('about') }}">{{ __('site.nav.about') }}</a></li>
-                    <li><a class="hero-text-link" href="{{ route('moments') }}">{{ __('site.nav.moments') }}</a></li>
-                    <li><a class="hero-text-link" href="{{ route('actualites') }}">{{ __('site.nav.news') }}</a></li>
-                    <li><a class="hero-text-link" href="{{ route('merch') }}">{{ __('site.nav.merch') }}</a></li>
-                </ul>
+                <div class="gms">
+                    <div class="gms__display">
+                        <span class="gms__display-text is-hidden" id="gms-display"></span>
+                    </div>
+                    <ul class="gms__list" id="hero-nav-list">
+                        <li><a class="gms__item" href="{{ route('about') }}"                          data-label="{{ __('site.nav.about') }}">{{ __('site.nav.about') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="{{ __('site.nav.moments') }}">{{ __('site.nav.moments') }}</a></li>
+                        <li><a class="gms__item" href="#" id="blog-gate-trigger-welcome" data-label="{{ __('site.nav.blog') }}">{{ __('site.nav.blog') }}</a></li>
+                        <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="{{ __('site.nav.espace') }}" target="_blank" rel="noopener">{{ __('site.nav.espace') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('merch') }}"                          data-label="{{ __('site.nav.merch') }}">{{ __('site.nav.merch') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('contact') }}"                        data-label="{{ __('site.nav.contact') }}">{{ __('site.nav.contact') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('stay-weird') }}"                     data-label="{{ __('site.nav.weird') }}">{{ __('site.nav.weird') }}</a></li>
+                    </ul>
+                </div>
             </nav>
         </div>
         <div class="hero-video-badge">
@@ -543,6 +690,31 @@
                 v.addEventListener('pause', syncHeroMediaBtn);
                 syncHeroMediaBtn();
             }
+            // GMS interaction
+            var gmsDisplay = document.getElementById('gms-display');
+            var gmsItems = document.querySelectorAll('.gms__item');
+            var gmsSelected = null;
+            if (gmsDisplay && gmsItems.length) {
+                gmsItems.forEach(function(item) {
+                    item.addEventListener('mouseenter', function() {
+                        gmsDisplay.textContent = item.dataset.label;
+                        gmsDisplay.classList.remove('is-hidden');
+                    });
+                    item.addEventListener('mouseleave', function() {
+                        if (gmsSelected !== item) gmsDisplay.classList.add('is-hidden');
+                    });
+                    item.addEventListener('touchstart', function(e) {
+                        if (gmsSelected === item) return;
+                        e.preventDefault();
+                        gmsItems.forEach(function(i) { i.classList.remove('is-highlighted'); });
+                        gmsSelected = item;
+                        item.classList.add('is-highlighted');
+                        gmsDisplay.textContent = item.dataset.label;
+                        gmsDisplay.classList.remove('is-hidden');
+                    }, { passive: false });
+                });
+            }
+
             var letsgo = document.getElementById('btn-letsgo');
             var heroNav = document.getElementById('hero-nav');
             if (letsgo && heroNav) {
@@ -557,6 +729,66 @@
                 });
             }
         })();
+    </script>
+
+    {{-- ── Blog password gate ── --}}
+    <div id="blog-gate-welcome" style="
+        display:none;
+        position:fixed;inset:0;z-index:99998;
+        background:rgba(0,0,0,0.92);
+        align-items:center;justify-content:center;
+        flex-direction:column;gap:1.5rem;
+    ">
+        <p style="font-family:'Press Start 2P',monospace;font-size:clamp(0.6rem,2.5vw,0.85rem);color:rgba(255,255,255,0.5);letter-spacing:0.1em;text-transform:uppercase;">{{ __('site.contact.password') }}</p>
+        <input id="blog-gate-input-welcome" type="password" autocomplete="off" placeholder="••••••••" style="
+            font-family:'Press Start 2P',monospace;
+            font-size:clamp(0.75rem,3vw,1rem);
+            background:transparent;
+            border:none;
+            border-bottom:2px solid rgba(228,0,124,0.6);
+            color:#fff;
+            text-align:center;
+            outline:none;
+            padding:0.5rem 1rem;
+            width:min(280px,80vw);
+            letter-spacing:0.15em;
+        ">
+        <p id="blog-gate-error-welcome" style="font-family:'Press Start 2P',monospace;font-size:0.55rem;color:#e4007c;opacity:0;transition:opacity 0.2s;">{{ __('site.contact.wrong') }}</p>
+    </div>
+    <script>
+    (function () {
+        var trigger = document.getElementById('blog-gate-trigger-welcome');
+        var gate    = document.getElementById('blog-gate-welcome');
+        var input   = document.getElementById('blog-gate-input-welcome');
+        var error   = document.getElementById('blog-gate-error-welcome');
+        var URL     = 'https://www.tumblr.com/saaheemwrld';
+
+        function openGate(e) {
+            e.preventDefault();
+            gate.style.display = 'flex';
+            input.value = '';
+            error.style.opacity = '0';
+            setTimeout(function () { input.focus(); }, 50);
+        }
+        function closeGate() { gate.style.display = 'none'; }
+        function check() {
+            if (input.value.trim().toLowerCase() === 'stayweird') {
+                closeGate();
+                window.open(URL, '_blank', 'noopener,noreferrer');
+            } else {
+                error.style.opacity = '1';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        trigger.addEventListener('click', openGate);
+        gate.addEventListener('click', function (e) { if (e.target === gate) closeGate(); });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') check();
+            if (e.key === 'Escape') closeGate();
+        });
+    })();
     </script>
 </body>
 </html>

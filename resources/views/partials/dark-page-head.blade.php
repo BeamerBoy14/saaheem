@@ -27,13 +27,23 @@
         background: rgba(255, 255, 255, 0.05);
     }
     body.page-dark .nav-toggle span { background: #fff; }
+    body.page-dark .nav-more__trigger {
+        color: rgba(255, 255, 255, 0.85);
+    }
+    body.page-dark .nav-more__trigger:hover,
+    body.page-dark .nav-more__trigger.is-active {
+        color: #fff;
+        border-bottom-color: var(--magenta);
+    }
     @media (max-width: 960px) {
         body.page-dark .nav-main {
             background: #140810;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        body.page-dark .nav-main a {
+        body.page-dark .nav-main a,
+        body.page-dark .nav-more__dropdown a {
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.85);
         }
     }
     .dark-page__surface {

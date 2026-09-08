@@ -252,10 +252,11 @@
                 <span class="moments-cat__display-text is-blank" id="cat-display-1">&nbsp;</span>
             </div>
             <ul class="moments-cat__list">
-                <li class="moments-cat__item" data-action="all"   data-label="Tout">Tout</li>
+                <li class="moments-cat__item" data-action="all"   data-label="Pinterest mode">Pinterest mode</li>
                 <li class="moments-cat__item" data-action="image" data-label="Photo">Photo</li>
                 <li class="moments-cat__item" data-action="video" data-label="Vidéo">Vidéo</li>
             </ul>
+            <button id="cat-home-btn" style="margin-top:1.2rem;align-self:center;background:none;border:1px solid rgba(255,255,255,0.2);border-radius:999px;cursor:pointer;font-family:var(--font-retro,'Press Start 2P',monospace);font-size:clamp(0.45rem,1.6vw,0.6rem);color:rgba(255,255,255,0.45);padding:0.55rem 1.2rem;position:relative;z-index:2;transition:color 0.15s,border-color 0.15s;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--magenta)'" onmouseout="this.style.color='rgba(255,255,255,0.45)';this.style.borderColor='rgba(255,255,255,0.2)'">◀ Retour</button>
         </div>
 
         {{-- Étape 2 : sous-catégories (peuplée dynamiquement) --}}
@@ -335,18 +336,14 @@
                 { label: 'Fashion week',       slug: 'fashion-week' },
                 { label: 'Concert / Festival', slug: 'concert-festival' },
                 { label: 'Brand',              slug: 'brand' },
-                { label: 'Portrait',           slug: 'portrait' },
                 { label: 'Soirée',             slug: 'soiree' },
                 { label: 'Shoot',              slug: 'shoot' },
-                { label: 'Personal Emotions',  slug: 'personal-emotions' },
             ],
             video: [
                 { label: 'Artist',     slug: 'artist' },
                 { label: 'Clip',       slug: 'clip' },
-                { label: 'Brand',      slug: 'brand' },
-                { label: 'Interview',  slug: 'interview' },
                 { label: 'Aftermovie', slug: 'aftermovie' },
-                { label: 'Life',       slug: 'life' },
+                { label: 'Production', slug: 'production' },
             ],
         };
 
@@ -414,7 +411,13 @@
             });
         }
 
-        /* ── Back button ── */
+        /* ── Home button (step 1) ── */
+        document.getElementById('cat-home-btn').addEventListener('click', function () {
+            if (window.history.length > 1) { window.history.back(); }
+            else { window.location.href = '{{ route('home') }}'; }
+        });
+
+        /* ── Back button (step 2 → step 1) ── */
         document.getElementById('cat-back-btn').addEventListener('click', function () {
             step2.hidden = true;
             step1.hidden = false;

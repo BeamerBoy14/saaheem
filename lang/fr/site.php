@@ -52,7 +52,7 @@ return [
         'aria'      => 'Moments',
         'kicker'    => 'Galerie',
         'heading'   => 'Moments',
-        'lead'      => 'Images et séquences — la nuit, les scènes et les détails qui définissent SAAHEEM.',
+        'lead'      => 'Images & videos shoot by SAAHEEM.',
         'gallery'   => 'Galerie',
         'empty'     => 'Aucun média pour l\'instant. Ajoute des images et vidéos dans <code>public/photos</code>, ou des clips dans <code>public/videos</code> (hors <code>bk.mp4</code>), puis recharge la page.',
         'back_home' => '← Retour à l\'accueil',

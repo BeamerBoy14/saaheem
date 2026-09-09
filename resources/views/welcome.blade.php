@@ -60,12 +60,20 @@
             background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(26,10,20,.5) 50%, rgba(0,0,0,.55) 100%);
             pointer-events: none;
         }
+        .hero__brand {
+            position: absolute;
+            z-index: 2;
+            top: clamp(5rem, 18vh, 9rem);
+            left: 0;
+            right: 0;
+            text-align: center;
+            pointer-events: none;
+        }
         .hero__content {
             position: relative;
             z-index: 2;
             text-align: center;
-            padding: clamp(4rem, 12vh, 6rem) 1rem clamp(2.5rem, 8vh, 4rem);
-            /* Délai entre chaque lettre dans la vague (S→T→A→Y et W→E→I→R→D). */
+            padding: 0 1rem;
             --hero-seq-step: 0.38s;
         }
         .hero__top {
@@ -161,30 +169,88 @@
             outline: none;
         }
         .btn-letsgo {
-            margin-top: clamp(1.25rem, 4vw, 2rem);
+            margin-top: 0;
             cursor: pointer;
             font-family: var(--font-retro);
-            font-size: clamp(2rem, 11vw, 8rem);
-            letter-spacing: 0.05em;
+            font-size: clamp(1.4rem, 5vw, 3.5rem);
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             background: none;
             border: none;
             box-shadow: none;
-            background-image: none;
-            -webkit-text-fill-color: #fff;
-            color: #fff;
-            display: block;
-            width: 100%;
-            text-align: center;
-            animation: gms-pulse 1.2s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(228,0,124,0.8));
+            background-image: linear-gradient(
+                175deg,
+                #ffffff 0%,
+                #ffd6ee 10%,
+                #ffffff 22%,
+                #ff80c0 38%,
+                #e4007c 52%,
+                #ff55aa 65%,
+                #ffffff 78%,
+                #ffd6ee 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            display: inline-block;
+            width: auto;
+            animation: letsgo-neon 1.8s ease-in-out infinite;
             padding: 0.5rem 0;
-            margin-top: clamp(2rem, 8vh, 5rem);
             line-height: 1.15;
             word-break: break-word;
         }
+        @keyframes letsgo-neon {
+            0%, 100% {
+                filter:
+                    drop-shadow(0 0 4px rgba(228,0,124,1))
+                    drop-shadow(0 0 14px rgba(228,0,124,0.9))
+                    drop-shadow(0 0 35px rgba(228,0,124,0.65))
+                    drop-shadow(0 0 70px rgba(228,0,124,0.35));
+            }
+            50% {
+                filter:
+                    drop-shadow(0 0 2px rgba(228,0,124,0.7))
+                    drop-shadow(0 0 6px rgba(228,0,124,0.5))
+                    drop-shadow(0 0 16px rgba(228,0,124,0.3))
+                    drop-shadow(0 0 35px rgba(228,0,124,0.15));
+            }
+        }
         .btn-letsgo::before { content: '▶'; font-size: 2rem; color: var(--magenta); -webkit-text-fill-color: var(--magenta); background-image: none; margin-right: 0.5rem; }
         .btn-letsgo::after  { content: '◀'; font-size: 2rem; color: var(--magenta); -webkit-text-fill-color: var(--magenta); background-image: none; margin-left: 0.5rem; }
+
+        /* ── Shatter animation ── */
+        @keyframes brand-crack {
+            0%   { transform: translate(0,0) rotate(0deg); }
+            15%  { transform: translate(-5px, 3px) rotate(-2deg); }
+            30%  { transform: translate(5px, -4px) rotate(2deg); }
+            45%  { transform: translate(-4px, -3px) rotate(-1.5deg); }
+            60%  { transform: translate(4px, 4px) rotate(1.5deg); }
+            80%  { transform: translate(-2px, 2px) rotate(-0.5deg); }
+            100% { transform: translate(0,0) rotate(0deg); }
+        }
+        @keyframes fly-s { 0%{transform:translate(0,0)rotate(0deg)scale(1);opacity:1} 100%{transform:translate(-480px,-320px)rotate(-220deg)scale(0);opacity:0} }
+        @keyframes fly-t { 0%{transform:translate(0,0)rotate(0deg)scale(1);opacity:1} 100%{transform:translate(-80px,-420px)rotate(60deg)scale(0);opacity:0} }
+        @keyframes fly-a { 0%{transform:translate(0,0)rotate(0deg)scale(1);opacity:1} 100%{transform:translate(180px,-380px)rotate(-80deg)scale(0);opacity:0} }
+        @keyframes fly-y { 0%{transform:translate(0,0)rotate(0deg)scale(1);opacity:1} 100%{transform:translate(450px,-180px)rotate(140deg)scale(0);opacity:0} }
+        @keyframes fly-w { 0%{transform:translate(0,0)rotate(var(--r,0deg))scale(1);opacity:1} 100%{transform:translate(-400px,280px)rotate(-180deg)scale(0);opacity:0} }
+        @keyframes fly-e { 0%{transform:translate(0,0)rotate(var(--r,0deg))scale(1);opacity:1} 100%{transform:translate(-120px,400px)rotate(100deg)scale(0);opacity:0} }
+        @keyframes fly-i { 0%{transform:translate(0,0)rotate(var(--r,0deg))scale(1);opacity:1} 100%{transform:translate(60px,420px)rotate(-130deg)scale(0);opacity:0} }
+        @keyframes fly-r { 0%{transform:translate(0,0)rotate(var(--r,0deg))scale(1);opacity:1} 100%{transform:translate(350px,300px)rotate(160deg)scale(0);opacity:0} }
+        @keyframes fly-d { 0%{transform:translate(0,0)rotate(var(--r,0deg))scale(1);opacity:1} 100%{transform:translate(480px,150px)rotate(-90deg)scale(0);opacity:0} }
+
+        .hero__brand.is-shattering { animation: brand-crack 0.18s ease-in-out; }
+
+        .hero__brand.is-shattering .hero-stay .char:nth-child(1) { animation: fly-s 0.52s cubic-bezier(0.4,0,1,0.8) 0.16s both; }
+        .hero__brand.is-shattering .hero-stay .char:nth-child(2) { animation: fly-t 0.48s cubic-bezier(0.4,0,1,0.8) 0.12s both; }
+        .hero__brand.is-shattering .hero-stay .char:nth-child(3) { animation: fly-a 0.55s cubic-bezier(0.4,0,1,0.8) 0.19s both; }
+        .hero__brand.is-shattering .hero-stay .char:nth-child(4) { animation: fly-y 0.5s cubic-bezier(0.4,0,1,0.8) 0.14s both; }
+
+        .hero__brand.is-shattering .hero-weird__tile:nth-child(1) { animation: fly-w 0.54s cubic-bezier(0.4,0,1,0.8) 0.1s both; }
+        .hero__brand.is-shattering .hero-weird__tile:nth-child(2) { animation: fly-e 0.5s cubic-bezier(0.4,0,1,0.8) 0.2s both; }
+        .hero__brand.is-shattering .hero-weird__tile:nth-child(3) { animation: fly-i 0.46s cubic-bezier(0.4,0,1,0.8) 0.08s both; }
+        .hero__brand.is-shattering .hero-weird__tile:nth-child(4) { animation: fly-r 0.58s cubic-bezier(0.4,0,1,0.8) 0.22s both; }
+        .hero__brand.is-shattering .hero-weird__tile:nth-child(5) { animation: fly-d 0.51s cubic-bezier(0.4,0,1,0.8) 0.15s both; }
         .btn-letsgo.is-dismissed {
             opacity: 0;
             visibility: hidden;
@@ -197,23 +263,25 @@
             animation: none;
         }
         .hero-nav {
+            display: none;
             margin-top: clamp(1rem, 3vw, 1.5rem);
             opacity: 0;
-            visibility: hidden;
             transform: translateY(10px);
             pointer-events: none;
-            transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .hero-nav.is-visible {
+            display: block;
         }
         .hero-nav.is-revealed {
             opacity: 1;
-            visibility: visible;
             transform: translateY(0);
             pointer-events: auto;
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-nav {
                 transform: none;
-                transition: opacity 0.2s ease, visibility 0.2s;
+                transition: opacity 0.2s ease;
             }
         }
         .hero-nav__list {
@@ -257,6 +325,7 @@
             .hero-text-link { font-size: 0.85rem; }
             .hero-stay { font-size: clamp(1.6rem, 9vw, 3.5rem); }
             .hero-weird__letter { font-size: clamp(1.1rem, 5.5vw, 2.2rem); }
+            .gms__display { margin-bottom: 50rem; }
         }
         @keyframes hero-seq-up-stay {
             0%, 2% { transform: translate3d(0, 0, 0) rotate(0deg); }
@@ -626,7 +695,7 @@
                 </div>
             </div>
         </div>
-        <div class="hero__content">
+        <div class="hero__brand">
             <div class="hero-stay" aria-hidden="true">
                 <span class="char">S</span><span class="char char--block">T</span><span class="char char--block">A</span><span class="char">Y</span>
             </div>
@@ -637,6 +706,8 @@
                 <span class="hero-weird__tile"><span class="hero-weird__letter">R</span></span>
                 <span class="hero-weird__tile"><span class="hero-weird__letter">D</span></span>
             </div>
+        </div>
+        <div class="hero__content">
             <button type="button" class="btn-letsgo" id="btn-letsgo" aria-expanded="false" aria-controls="hero-nav">{{ __('site.home.lets_go') }}</button>
             <nav class="hero-nav" id="hero-nav" aria-label="{{ __('site.nav.main') }}" aria-hidden="true">
                 <div class="gms">
@@ -714,17 +785,25 @@
                 });
             }
 
-            var letsgo = document.getElementById('btn-letsgo');
+            var letsgo  = document.getElementById('btn-letsgo');
             var heroNav = document.getElementById('hero-nav');
+            var brand   = document.querySelector('.hero__brand');
             if (letsgo && heroNav) {
                 letsgo.addEventListener('click', function () {
                     letsgo.classList.add('is-dismissed');
                     letsgo.setAttribute('aria-expanded', 'true');
+                    if (brand) brand.classList.add('is-shattering');
                     window.setTimeout(function () {
                         letsgo.hidden = true;
-                        heroNav.classList.add('is-revealed');
-                        heroNav.setAttribute('aria-hidden', 'false');
-                    }, 320);
+                        if (brand) brand.hidden = true;
+                        heroNav.classList.add('is-visible');
+                        requestAnimationFrame(function () {
+                            requestAnimationFrame(function () {
+                                heroNav.classList.add('is-revealed');
+                                heroNav.setAttribute('aria-hidden', 'false');
+                            });
+                        });
+                    }, 750);
                 });
             }
         })();

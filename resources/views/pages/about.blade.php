@@ -139,13 +139,22 @@
             text-transform: uppercase;
             color: rgba(255,255,255,.45);
         }
+        .about-card__location {
+            margin: 0;
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,.38);
+        }
         .about-card__text {
             margin: 0;
             font-family: 'DM Sans', system-ui, sans-serif;
             font-size: clamp(0.9rem, 2vw, 1rem);
             font-weight: 300;
             line-height: 1.8;
-            color: rgba(0,0,0,.45);
+            color: rgba(0,0,0,.55);
             max-width: 30rem;
         }
 
@@ -247,12 +256,15 @@
             <div class="about-card__overlay"></div>
             <div class="about-card__body about-card__body--split">
                 <div class="about-card__photo">
-                    <img src="{{ asset('photos/IMG_0945.jpeg') }}" alt="" loading="lazy">
+                    <img src="{{ asset('saaheem/1.1.jpg') }}" alt="Saaheem" loading="lazy">
                 </div>
                 <div class="about-card__copy">
-                    <p class="about-card__kicker">Chapitre 01</p>
-                    <h2 class="about-card__heading">—</h2>
-                    <p class="about-card__text">Cette section sera complétée prochainement.</p>
+                    <p class="about-card__kicker">Artist / Producer / Creative</p>
+                    <h2 class="about-card__heading">SAAHEEM</h2>
+                    <p class="about-card__location">Born in France &middot; Based in Brussels</p>
+                    <p class="about-card__text">I'm a self-taught artist, producer</p>
+                    <p class="about-card__text">I move between music, visuals, fashion, events and culture but most of all, I make things happen</p>
+                    <p class="about-card__text">I shoot. I DJ. I produce. I create.<br>I plug artists, connect people, find opportunities and build bridges between different scenes and cities</p>
                 </div>
             </div>
         </div>

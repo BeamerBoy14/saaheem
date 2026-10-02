@@ -81,17 +81,75 @@
         }
         @media (max-width: 680px) {
             .about-card__body--split,
-            .about-card__body--split-rev { flex-direction: column; text-align: center; }
+            .about-card__body--split-rev { flex-direction: column; text-align: center; align-items: center; }
+            .about-card--0 .about-card__body {
+                width: 100%;
+                max-width: 100vw;
+                padding: 0;
+                gap: 1.5rem;
+                overflow: hidden;
+            }
+            .about-card--0 .about-card__photo {
+                width: 100vw;
+                max-width: 100vw;
+                height: 55vh;
+                aspect-ratio: auto;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .about-card--0 .about-card__copy {
+                padding: 0 1.5rem;
+            }
+            .about-card__name {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+        }
+
+        /* ── Scroll hint ── */
+        .about-scroll-hint {
+            position: absolute;
+            bottom: clamp(1.5rem, 4vh, 2.5rem);
+            right: clamp(1.5rem, 3vw, 2.5rem);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .about-scroll-hint__label {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #e4007c;
+        }
+        .about-scroll-hint__line {
+            width: 2px;
+            height: 60px;
+            background: #e4007c;
+            transform-origin: top;
+            animation: hint-drop 1.6s ease-in-out infinite;
         }
 
         /* ── Photo frame ── */
         .about-card__photo {
             flex-shrink: 0;
-            width: clamp(200px, 32vw, 340px);
+            width: clamp(200px, 32vw, 380px);
             aspect-ratio: 3/4;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 16px 48px rgba(0,0,0,.08);
+        }
+        /* Card 0 : contrainte par la hauteur pour ne pas déborder */
+        .about-card--0 .about-card__photo {
+            width: auto;
+            height: clamp(300px, 72vh, 82vh);
+        }
+        .about-card--0 .about-card__body {
+            width: min(1100px, calc(100% - 3rem));
+            gap: clamp(2rem, 5vw, 5rem);
         }
         .about-card__photo img {
             width: 100%; height: 100%;
@@ -104,7 +162,7 @@
         .about-card__kicker {
             margin: 0;
             font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: 0.68rem;
+            font-size: clamp(1rem, 2.2vw, 1.4rem);
             font-weight: 500;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -121,10 +179,27 @@
             text-transform: uppercase;
             text-shadow: 0 4px 40px rgba(0,0,0,.4);
         }
+        .about-card__name {
+            position: absolute;
+            top: clamp(1.2rem, 3.5vh, 2.5rem);
+            left: clamp(1.5rem, 4vw, 3rem);
+            margin: 0;
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            z-index: 3;
+            background: linear-gradient(135deg, #ff80c0 0%, #e4007c 35%, #ff55aa 60%, #ffb3d9 85%, #e4007c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
         .about-card__heading {
             margin: 0;
             font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(2rem, 7vw, 4rem);
+            font-size: clamp(3.5rem, 10vw, 7rem);
             font-weight: 300;
             letter-spacing: -0.02em;
             line-height: 1.05;
@@ -142,7 +217,7 @@
         .about-card__location {
             margin: 0;
             font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: 0.72rem;
+            font-size: clamp(1rem, 2.2vw, 1.4rem);
             font-weight: 400;
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -151,11 +226,37 @@
         .about-card__text {
             margin: 0;
             font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-size: clamp(1.45rem, 3.2vw, 2rem);
             font-weight: 300;
-            line-height: 1.8;
+            line-height: 1.7;
             color: rgba(0,0,0,.55);
-            max-width: 30rem;
+            max-width: 38rem;
+        }
+        .about-card__text--bold { font-weight: 600; color: #111; }
+
+        /* ── Card 1: grid 2×2 ── */
+        .about-card__grid {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: clamp(0.25rem, 0.6vw, 0.5rem);
+            padding: clamp(0.25rem, 0.6vw, 0.5rem);
+        }
+        .about-card__grid-item {
+            overflow: hidden;
+            min-height: 0;
+        }
+        .about-card__grid-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        .about-card__grid-item:hover img {
+            transform: scale(1.03);
         }
 
         /* ── Cards 0 & 1: fond blanc ── */
@@ -187,6 +288,43 @@
             50%      { transform: scaleY(1) translateY(0);     opacity: 1; }
         }
 
+        /* ── Card 2: body texte ── */
+        .about-card__body--text {
+            text-align: center;
+            align-items: center;
+            max-width: 680px;
+            gap: clamp(0.9rem, 2vh, 1.4rem);
+        }
+        .about-card__text--lead {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-weight: 300;
+            line-height: 1.35;
+            color: #111;
+            margin: 0;
+        }
+        .about-card__links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.4rem;
+            margin-top: 0.4rem;
+        }
+        .about-card__link {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: clamp(0.72rem, 1.4vw, 0.88rem);
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111;
+            border-bottom: 1px solid rgba(0,0,0,.22);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .about-card__link:visited { color: #111; }
+        .about-card__link:hover,
+        .about-card__link:focus { color: #e4007c; border-color: #e4007c; }
+
         /* ── Back button ── */
         .about-back {
             display: inline-flex;
@@ -208,6 +346,12 @@
             background: #e4007c;
             border-color: #e4007c;
             color: #fff;
+        }
+        .about-back--lg {
+            padding: 1rem 5rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.22em;
+            margin-top: clamp(1.5rem, 4vh, 3rem);
         }
 
         /* ── Progress dots ── */
@@ -254,13 +398,17 @@
         {{-- Card 0 --}}
         <div class="about-card about-card--0" id="about-card-0">
             <div class="about-card__overlay"></div>
+            <h2 class="about-card__name">SAAHEEM</h2>
+            <div class="about-scroll-hint" aria-hidden="true">
+                <span class="about-scroll-hint__label">Scroll</span>
+                <span class="about-scroll-hint__line"></span>
+            </div>
             <div class="about-card__body about-card__body--split">
                 <div class="about-card__photo">
                     <img src="{{ asset('saaheem/1.1.jpg') }}" alt="Saaheem" loading="lazy">
                 </div>
                 <div class="about-card__copy">
                     <p class="about-card__kicker">Artist / Producer / Creative</p>
-                    <h2 class="about-card__heading">SAAHEEM</h2>
                     <p class="about-card__location">Born in France &middot; Based in Brussels</p>
                     <p class="about-card__text">I'm a self-taught artist, producer</p>
                     <p class="about-card__text">I move between music, visuals, fashion, events and culture but most of all, I make things happen</p>
@@ -269,29 +417,30 @@
             </div>
         </div>
 
-        {{-- Card 1 --}}
+        {{-- Card 1 — pleine page --}}
         <div class="about-card about-card--1" id="about-card-1">
-            <div class="about-card__overlay"></div>
-            <div class="about-card__body about-card__body--split about-card__body--split-rev">
-                <div class="about-card__photo">
-                    <img src="{{ asset('photos/IMG_1995.jpeg') }}" alt="" loading="lazy">
-                </div>
-                <div class="about-card__copy">
-                    <p class="about-card__kicker">Chapitre 02</p>
-                    <h2 class="about-card__heading">—</h2>
-                    <p class="about-card__text">Cette section sera complétée prochainement.</p>
-                </div>
+            <div class="about-card__bg">
+                <img src="{{ asset('saaheem/1.2.jpg') }}" alt="" loading="lazy">
             </div>
+            <div class="about-card__overlay"></div>
         </div>
 
-        {{-- Card 2 — Fin --}}
+        {{-- Card 2 — Bio suite + liens --}}
         <div class="about-card about-card--2" id="about-card-2">
             <div class="about-card__overlay"></div>
-            <div class="about-card__body">
-                <p class="about-card__kicker">{{ __('site.about.soon') }}</p>
-                <h2 class="about-card__heading">Bientôt.</h2>
-                <p class="about-card__text">{{ __('site.about.lead') }}</p>
-                <button type="button" class="about-back" id="about-back">{{ __('site.about.back') }}</button>
+            <div class="about-card__body about-card__body--text">
+                <p class="about-card__text--lead">I've always been the type to figure things out myself</p>
+                <p class="about-card__text">I'm also the founder of Stay Weird, a creative universe built around music, image, people and self-expression</p>
+                <p class="about-card__text">Today, I work with artists, studios, labels, models, brands, media and creative teams helping create projects, develop artists, build connections and bring ideas to life</p>
+                <p class="about-card__text about-card__text--bold">Artist / Producer / Creative Direction / Visuals / Events / Artist Development</p>
+                <p class="about-card__location">Based in Brussels &middot; Connected internationally</p>
+                <div class="about-card__links">
+                    <a href="https://youtube.com/@yungxboy?si=-au8fue6uFA_d6zf" target="_blank" rel="noopener" class="about-card__link">YouTube</a>
+                    <a href="https://on.soundcloud.com/aXUMABrPf4hNvEGhhr" target="_blank" rel="noopener" class="about-card__link">SoundCloud</a>
+                    <a href="#" id="about-blog-trigger" class="about-card__link">Blog</a>
+                    <a href="https://www.instagram.com/saaheem__?stkn=MTd6ZWF5MnFucjE0MQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="about-card__link">Instagram</a>
+                </div>
+                <a href="{{ route('home') }}" class="about-back about-back--lg">Menu</a>
             </div>
         </div>
 
@@ -302,6 +451,16 @@
 @push('scripts')
 <script>
 (function () {
+    /* ── Blog gate (même gate que le header) ── */
+    var aboutBlogTrigger = document.getElementById('about-blog-trigger');
+    var blogGateTrigger  = document.getElementById('blog-gate-trigger');
+    if (aboutBlogTrigger && blogGateTrigger) {
+        aboutBlogTrigger.addEventListener('click', function (e) {
+            e.preventDefault();
+            blogGateTrigger.click();
+        });
+    }
+
     /* ── Back ── */
     var backBtn = document.getElementById('about-back');
     if (backBtn) {

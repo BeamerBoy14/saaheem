@@ -603,13 +603,16 @@
         }
         .gms__display-text {
             font-family: var(--font-retro);
-            font-size: clamp(2rem, 12vw, 5rem);
+            font-size: clamp(1.4rem, 7.5vw, 5rem);
             background-image: var(--retro-chrome);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 2px 10px rgba(0,0,0,0.7));
             line-height: 1.2;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
             transition: opacity 0.12s ease;
         }
         .gms__display-text.is-hidden { opacity: 0; animation: none; }
@@ -662,6 +665,46 @@
         .gms__item:focus-visible::after,
         .gms__item.is-highlighted::before,
         .gms__item.is-highlighted::after { opacity: 1; }
+
+        /* ── Stay Weird bleu + sous-menu ── */
+        .gms__item--blue                            { color: #00b4ff; -webkit-text-fill-color: #00b4ff; }
+        .gms__item--blue:visited                    { color: #00b4ff; -webkit-text-fill-color: #00b4ff; }
+        .gms__item--blue:hover,
+        .gms__item--blue:focus-visible              { color: #7dd8ff; -webkit-text-fill-color: #7dd8ff; }
+        .gms__item--blue::before,
+        .gms__item--blue::after                     { color: #00b4ff; }
+
+        .gms__submenu {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 0.4rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+        .gms__submenu.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .gms__subitem {
+            font-family: var(--font-retro);
+            font-size: clamp(0.72rem, 2.8vw, 0.95rem);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(0,180,255,0.55);
+            -webkit-text-fill-color: rgba(0,180,255,0.55);
+            padding: 0.55rem 1rem;
+            display: block;
+            text-align: center;
+            transition: color 0.15s, -webkit-text-fill-color 0.15s;
+        }
+        .gms__subitem:hover { color: #00b4ff; -webkit-text-fill-color: #00b4ff; }
 
         @keyframes gms-pulse {
             0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(228,0,124,0.6)); }
@@ -716,12 +759,19 @@
                     </div>
                     <ul class="gms__list" id="hero-nav-list">
                         <li><a class="gms__item" href="{{ route('about') }}"                          data-label="{{ __('site.nav.about') }}">{{ __('site.nav.about') }}</a></li>
-                        <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="{{ __('site.nav.moments') }}">{{ __('site.nav.moments') }}</a></li>
-                        <li><a class="gms__item" href="#" id="blog-gate-trigger-welcome" data-label="{{ __('site.nav.blog') }}">{{ __('site.nav.blog') }}</a></li>
-                        <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="{{ __('site.nav.espace') }}" target="_blank" rel="noopener">{{ __('site.nav.espace') }}</a></li>
-                        <li><a class="gms__item" href="{{ route('merch') }}"                          data-label="{{ __('site.nav.merch') }}">{{ __('site.nav.merch') }}</a></li>
-                        <li><a class="gms__item" href="{{ route('contact') }}"                        data-label="{{ __('site.nav.contact') }}">{{ __('site.nav.contact') }}</a></li>
-                        <li><a class="gms__item" href="{{ route('stay-weird') }}"                     data-label="{{ __('site.nav.weird') }}">{{ __('site.nav.weird') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="Photo / Video">Photo / Video</a></li>
+                        <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="Studio" target="_blank" rel="noopener">Studio</a></li>
+                        <li><a class="gms__item" href="#" data-label="Management">Management</a></li>
+                        <li>
+                            <a class="gms__item gms__item--blue" href="#" id="stay-weird-toggle" data-label="{{ __('site.nav.weird') }}" aria-expanded="false">{{ __('site.nav.weird') }}</a>
+                            <ul class="gms__submenu" id="stay-weird-sub" hidden>
+                                <li><a class="gms__subitem" href="{{ route('home') }}">Accueil</a></li>
+                                <li><a class="gms__subitem" href="{{ route('merch') }}">Merch</a></li>
+                                <li><a class="gms__subitem" href="#">Event</a></li>
+                                <li><a class="gms__subitem" href="#">DVD</a></li>
+                            </ul>
+                        </li>
+                        <li style="margin-top: clamp(1.2rem, 4vh, 2rem);"><a class="gms__item" href="{{ route('contact') }}"                        data-label="{{ __('site.nav.contact') }}">{{ __('site.nav.contact') }}</a></li>
                     </ul>
                 </div>
             </nav>
@@ -833,6 +883,34 @@
         ">
         <p id="blog-gate-error-welcome" style="font-family:'Press Start 2P',monospace;font-size:0.55rem;color:#e4007c;opacity:0;transition:opacity 0.2s;">{{ __('site.contact.wrong') }}</p>
     </div>
+    <script>
+    (function () {
+        /* ── Stay Weird sous-menu ── */
+        var swToggle = document.getElementById('stay-weird-toggle');
+        var swSub    = document.getElementById('stay-weird-sub');
+        if (swToggle && swSub) {
+            swToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                var opening = swSub.hidden;
+                if (opening) {
+                    swSub.hidden = false;
+                    requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                            swSub.classList.add('is-visible');
+                        });
+                    });
+                } else {
+                    swSub.classList.remove('is-visible');
+                    swSub.addEventListener('transitionend', function hide() {
+                        swSub.hidden = true;
+                        swSub.removeEventListener('transitionend', hide);
+                    });
+                }
+                swToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+            });
+        }
+    })();
+    </script>
     <script>
     (function () {
         var trigger = document.getElementById('blog-gate-trigger-welcome');

@@ -235,10 +235,129 @@
             color: rgba(255, 255, 255, 0.55); font-size: 0.95rem;
         }
         .moments-page__empty a { color: var(--magenta); font-weight: 700; }
+        .moments-masonry__item { cursor: pointer; }
+
+        /* ── Media lightbox ── */
+        .media-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .media-lightbox.is-open { opacity: 1; }
+        .media-lightbox[hidden] { display: none !important; }
+
+        .media-lightbox__close {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.5rem;
+            z-index: 2;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.15s;
+        }
+        .media-lightbox__close:hover { background: rgba(228,0,124,0.35); border-color: var(--magenta); }
+
+        .media-lightbox__inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: min(900px, 100%);
+            max-height: 90vh;
+            width: 100%;
+        }
+        .media-lightbox__media-wrap {
+            flex-shrink: 0;
+            max-height: 65vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .media-lightbox__media-wrap img,
+        .media-lightbox__media-wrap video {
+            max-width: 100%;
+            max-height: 65vh;
+            border-radius: 10px;
+            display: block;
+            object-fit: contain;
+        }
+        .media-lightbox__meta {
+            width: 100%;
+            max-width: 540px;
+        }
+        .media-lightbox__dl {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.6rem 1.25rem;
+            margin: 0;
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .media-lightbox__dl dt {
+            font-family: var(--font-retro, 'Press Start 2P', monospace);
+            font-size: 0.55rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .media-lightbox__dl dd {
+            margin: 0;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.55);
+            display: flex;
+            align-items: center;
+        }
+        @media (max-width: 640px) {
+            .media-lightbox { padding: 1rem 0.75rem; }
+            .media-lightbox__inner { gap: 1rem; }
+            .media-lightbox__media-wrap { max-height: 50vh; }
+            .media-lightbox__media-wrap img,
+            .media-lightbox__media-wrap video { max-height: 50vh; }
+        }
     </style>
 @endpush
 
 @section('content')
+    {{-- ── Media lightbox ── --}}
+    <div class="media-lightbox" id="media-lightbox" hidden role="dialog" aria-modal="true">
+        <button class="media-lightbox__close" id="lb-close" aria-label="Fermer">✕</button>
+        <div class="media-lightbox__inner">
+            <div class="media-lightbox__media-wrap" id="lb-media-wrap"></div>
+            <div class="media-lightbox__meta">
+                <dl class="media-lightbox__dl">
+                    <dt>Description</dt>
+                    <dd id="lb-desc">—</dd>
+                    <dt>Date</dt>
+                    <dd id="lb-date">—</dd>
+                    <dt>Lieu</dt>
+                    <dd id="lb-lieu">—</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
     {{-- ── Category overlay ── --}}
     <div class="moments-cat-overlay" id="moments-cat-overlay" role="dialog" aria-modal="true" aria-label="Choisir une catégorie">
         <video class="moments-cat-overlay__bg" autoplay muted loop playsinline preload="auto" aria-hidden="true">
@@ -468,6 +587,64 @@
                 }
             });
         }
+    })();
+
+    /* ── Media lightbox ── */
+    (function () {
+        var lb        = document.getElementById('media-lightbox');
+        var lbWrap    = document.getElementById('lb-media-wrap');
+        var lbClose   = document.getElementById('lb-close');
+        var lbDesc    = document.getElementById('lb-desc');
+        var lbDate    = document.getElementById('lb-date');
+        var lbLieu    = document.getElementById('lb-lieu');
+
+        function openLightbox(item) {
+            lbWrap.innerHTML = '';
+            lbDesc.textContent = '—';
+            lbDate.textContent = '—';
+            lbLieu.textContent = '—';
+
+            var isVideo = item.classList.contains('moments-masonry__item--video');
+            var src = isVideo
+                ? item.querySelector('video').src
+                : item.querySelector('img').src;
+
+            if (isVideo) {
+                var v = document.createElement('video');
+                v.src = src;
+                v.controls = true;
+                v.autoplay = true;
+                v.muted = false;
+                v.playsInline = true;
+                lbWrap.appendChild(v);
+            } else {
+                var img = document.createElement('img');
+                img.src = src;
+                img.alt = '';
+                lbWrap.appendChild(img);
+            }
+
+            lb.hidden = false;
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(function () { lb.classList.add('is-open'); });
+        }
+
+        function closeLightbox() {
+            lb.classList.remove('is-open');
+            document.body.style.overflow = '';
+            setTimeout(function () {
+                lb.hidden = true;
+                lbWrap.innerHTML = '';
+            }, 250);
+        }
+
+        document.querySelectorAll('.moments-masonry__item').forEach(function (item) {
+            item.addEventListener('click', function () { openLightbox(item); });
+        });
+
+        lbClose.addEventListener('click', closeLightbox);
+        lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
     })();
     </script>
 @endpush

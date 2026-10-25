@@ -759,6 +759,7 @@
                     </div>
                     <ul class="gms__list" id="hero-nav-list">
                         <li><a class="gms__item" href="{{ route('about') }}"                          data-label="{{ __('site.nav.about') }}">{{ __('site.nav.about') }}</a></li>
+                        <li><a class="gms__item" href="https://youtu.be/vvKvbrI6Wi0?si=Mxx-fVNmc1f5Y6w3" data-label="Interview" target="_blank" rel="noopener">Interview</a></li>
                         <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="Photo / Video">Photo / Video</a></li>
                         <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="Studio" target="_blank" rel="noopener">Studio</a></li>
                         <li><a class="gms__item" href="#" data-label="Management">Management</a></li>

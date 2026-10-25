@@ -249,6 +249,8 @@
                 padding: 0;
                 flex-shrink: 0;
                 margin-left: auto;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
             }
             .nav-toggle span {
                 width: 18px;
@@ -277,7 +279,8 @@
                 padding: 0.85rem 0.5rem;
                 border-bottom: 1px solid #f0f0f0;
             }
-            .site-header { position: relative; }
+            /* overflow visible : sinon Safari iOS coupe le menu qui dépasse sous le header */
+            .site-header { position: relative; overflow: visible; }
             .site-header .wrap { position: relative; }
         }
         .page-blank {

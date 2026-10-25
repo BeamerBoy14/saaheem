@@ -36,6 +36,12 @@
         border-bottom-color: var(--magenta);
     }
     @media (max-width: 960px) {
+        /* Pas de flou sur mobile : backdrop-filter fait aussi couper le menu déroulant par Safari iOS */
+        body.page-dark .site-header {
+            background: #1a0a14;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
         body.page-dark .nav-main {
             background: #140810;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);

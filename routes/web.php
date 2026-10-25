@@ -195,9 +195,53 @@ Route::get('/management', function () {
             ->values();
     }
 
+    // Titres Spotify de STON! (profil « RƎD STONE ») : [titre, id du track, durée]
+    $spotifyArtist = '1KD4iQ30dSoT8pSoWqqTT6';
+    $tracks = collect([
+        ['NEIL ARMSTRONG',             '3jwQ2D9TdgYWfYn55hNfus', '1:06'],
+        ['SONO PER STRADA',            '6z3ff1fX3nblOuUovasS7j', '2:00'],
+        ['MY WA!',                     '1NJAlxGlCF8gsM9UXu6x5r', '1:57'],
+        ['EGO',                        '2YbUdXCC6H6raTS2u8VqNw', '1:21'],
+        ['R.I.P GREGORY FREESTYLE',    '22Rz2GCueMIlrDyfZ4rsnE', '2:17'],
+        ['PRETTYFASHION*',             '4VFoEpXdrK3VKjRaxnA1zQ', '2:07'],
+        ['BONNIE & CL!DE (N.W.R.#5)',  '1zIrq8pxMuXRUFmV34GPOZ', '1:13'],
+        ['H!GH-FLY (N.W.R.#2)',        '3mX0qMkQzLxtl6P9kBkEzQ', '2:37'],
+        ['2XCUP!NMYLEAN (N.W.R.#1)',   '3nVaFvKUBYcPGrpaA5WeTf', '2:04'],
+        ['ECHAPPATOIRE',               '3zFUlOFzyovyrXoadyPNx3', '1:30'],
+    ])->map(fn ($t) => ['title' => $t[0], 'id' => $t[1], 'duration' => $t[2]]);
+
+    // Clips YouTube de STON! (chaîne @Bigfourteen.14) : [titre, id de la vidéo, durée]
+    $youtubeChannel = 'https://www.youtube.com/@Bigfourteen.14';
+    $videos = collect([
+        ['NEIL ARMSTRONG',                  'QAVUhR4Wxao', '1:10'],
+        ['PRETTYFASHION (Clip)',            '2gAW6-78pM0', '1:40'],
+        ['SONO PER STRADA* (Clip officiel)', 'j84q3-n9u8w', '2:01'],
+        ['TRAP$LINK (Clip officiel)',       'SAxSS8jA7pM', '1:30'],
+        ['V.D.$ / N.W.R. Bonus track',      'pGhjsxjrs90', '1:39'],
+        ['N.W.R #5 (Official video)',       'AGw21oLpRPc', '1:10'],
+    ])->map(fn ($v) => ['title' => $v[0], 'id' => $v[1], 'duration' => $v[2]]);
+
+    // Linktree de STON! (non intégrable en iframe : x-frame-options SAMEORIGIN) : [plateforme, compte, url, couleur]
+    $linktree = [
+        'url'    => 'https://linktr.ee/STONY1420',
+        'handle' => '@$to1420',
+        'links'  => collect([
+            ['Instagram',  '@fourteendopamine', 'https://www.instagram.com/fourteendopamine', '#e1306c'],
+            ['TikTok',     '@the14creator',     'https://www.tiktok.com/@the14creator',       '#25f4ee'],
+            ['Spotify',    'RƎD STONE',         'https://open.spotify.com/artist/' . $spotifyArtist, '#1ed760'],
+            ['YouTube',    '@bigfourteen.14',   $youtubeChannel,                               '#ff0033'],
+            ['SoundCloud', 'STON!',             'https://on.soundcloud.com/PHososPgwX4ydzDdzp', '#ff5500'],
+        ])->map(fn ($l) => ['name' => $l[0], 'handle' => $l[1], 'url' => $l[2], 'color' => $l[3]]),
+    ];
+
     return view('pages.management', [
-        'activeNav' => 'management',
-        'photos'    => $photos,
+        'activeNav'      => 'management',
+        'photos'         => $photos,
+        'spotifyArtist'  => $spotifyArtist,
+        'tracks'         => $tracks,
+        'youtubeChannel' => $youtubeChannel,
+        'videos'         => $videos,
+        'linktree'       => $linktree,
     ]);
 })->name('management');
 

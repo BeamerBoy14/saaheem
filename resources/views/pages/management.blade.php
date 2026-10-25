@@ -285,14 +285,260 @@
             line-height: 1.2;
             color: #fff;
         }
+        /* Pilier cliquable (Musique) */
+        .mgmt-pillars__list li:has(.mgmt-pillars__btn) { padding: 0; }
+        .mgmt-pillars__btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.75rem;
+            width: 100%;
+            height: 100%;
+            padding: clamp(1.5rem, 3vw, 2.25rem);
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        .mgmt-pillars__open {
+            margin-top: auto;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--magenta);
+        }
+        .mgmt-pillars__list li:has(.mgmt-pillars__btn[aria-pressed="true"]) {
+            background: var(--magenta);
+        }
+        .mgmt-pillars__btn[aria-pressed="true"] .mgmt-pillars__num,
+        .mgmt-pillars__btn[aria-pressed="true"] .mgmt-pillars__open { color: #fff; }
         @media (max-width: 860px) {
             .mgmt-pillars__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
-        /* ── Galerie ── */
-        .mgmt-gallery {
+        /* ── Scène : Univers / Musique ── */
+        .mgmt-stage {
             padding: clamp(3rem, 7vh, 5rem) 0;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
+            scroll-margin-top: 80px;
+        }
+        .mgmt-panel { animation: mgmt-fade 0.45s ease; }
+        .mgmt-panel[hidden] { display: none; }
+        @keyframes mgmt-fade {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: none; }
+        }
+        .mgmt-panel__head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .mgmt-panel__back {
+            padding: 0;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+            cursor: pointer;
+        }
+        .mgmt-panel__back:hover { color: #fff; }
+
+        /* ── Musique : liste + lecteur ── */
+        .mgmt-music {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+            gap: clamp(1.5rem, 4vw, 3.5rem);
+            align-items: start;
+        }
+        .mgmt-music__sub {
+            margin: 0 0 0.5rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .mgmt-tracks {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .mgmt-track {
+            display: grid;
+            grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.95rem 0.5rem;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.82);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .mgmt-track:hover { background: rgba(255, 255, 255, 0.04); color: #fff; }
+        .mgmt-track__num {
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.35);
+        }
+        .mgmt-track__title {
+            font-size: clamp(1rem, 1.7vw, 1.15rem);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .mgmt-track__time {
+            font-size: 0.85rem;
+            font-variant-numeric: tabular-nums;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .mgmt-track.is-active { color: var(--magenta); }
+        .mgmt-track.is-active .mgmt-track__num { color: var(--magenta); }
+        .mgmt-music__spotify {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #fff;
+            text-decoration: none;
+            border-bottom: 2px solid #1ed760;
+            padding-bottom: 0.25rem;
+        }
+        .mgmt-music__spotify:hover { color: #1ed760; }
+        .mgmt-music__player {
+            position: sticky;
+            top: 90px;
+        }
+        .mgmt-music__player iframe {
+            display: block;
+            border-radius: 12px;
+            background: #170b12;
+        }
+        /* Variante vidéo : vignettes + lecteur 16:9 */
+        .mgmt-music--video { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+        .mgmt-track--video {
+            grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+            padding-block: 0.7rem;
+        }
+        .mgmt-track__thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 4px;
+            display: block;
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+        .mgmt-track--video:hover .mgmt-track__thumb,
+        .mgmt-track--video.is-active .mgmt-track__thumb { opacity: 1; }
+        .mgmt-track--video.is-active .mgmt-track__thumb { outline: 2px solid var(--magenta); outline-offset: 2px; }
+        .mgmt-music--video .mgmt-music__player iframe {
+            height: auto;
+            aspect-ratio: 16 / 9;
+        }
+        .mgmt-music__spotify--yt { border-bottom-color: #ff0033; }
+
+        /* Variante liens (Direction artistique) */
+        .mgmt-music--links { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+        .mgmt-track--link { text-decoration: none; }
+        .mgmt-track--link .mgmt-track__title small {
+            display: block;
+            margin-top: 0.15rem;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            color: rgba(255, 255, 255, 0.45);
+        }
+        .mgmt-track--link .mgmt-track__num { color: var(--brand); }
+        .mgmt-track--link:hover .mgmt-track__time { color: var(--brand); transform: translate(2px, -2px); }
+        .mgmt-track--link .mgmt-track__time { transition: transform 0.2s, color 0.2s; font-size: 1.1rem; }
+        .mgmt-linkcard {
+            position: sticky;
+            top: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.25rem 1.5rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(228, 0, 124, 0.22) 0%, transparent 70%),
+                #120a0f;
+            text-align: center;
+        }
+        .mgmt-linkcard__avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #1d0f17;
+            border: 2px solid var(--magenta);
+        }
+        .mgmt-linkcard__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mgmt-linkcard__handle {
+            margin: 1rem 0 0;
+            font-size: 0.85rem;
+            letter-spacing: 0.14em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .mgmt-linkcard__name {
+            margin: 0.2rem 0 1.5rem;
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: #fff;
+        }
+        .mgmt-linkcard__name span { color: var(--magenta); }
+        .mgmt-linkcard__links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            margin: 0 0 1.75rem;
+            padding: 0;
+            list-style: none;
+        }
+        .mgmt-linkcard__links a {
+            display: block;
+            padding: 0.8rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            text-decoration: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .mgmt-linkcard__links a:hover {
+            border-color: var(--brand);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .mgmt-linkcard__cta { text-decoration: none; }
+        .mgmt-music__spotify--yt:hover { color: #ff4d6d; }
+        @media (max-width: 860px) {
+            .mgmt-music { grid-template-columns: 1fr; }
+            .mgmt-music--video .mgmt-music__player iframe { height: auto; }
+            .mgmt-linkcard { position: static; }
+            /* Sur mobile le lecteur passe au-dessus de la liste */
+            .mgmt-music__player { position: static; order: -1; }
+            .mgmt-music__player iframe { height: 352px; }
         }
         .mgmt-gallery__grid {
             display: grid;
@@ -435,27 +681,149 @@
                 <p class="mgmt__label">{{ __('site.management.pillars_label') }}</p>
                 <ol class="mgmt-pillars__list">
                     @foreach (__('site.management.pillars') as $i => $pillar)
-                        <li>
-                            <span class="mgmt-pillars__num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="mgmt-pillars__name">{{ $pillar }}</span>
-                        </li>
+                        @php
+                            $num = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+                            // Piliers cliquables : Musique → Spotify, Image → Univers (photos),
+                            // Projets visuels → YouTube, Direction artistique → liens du Linktree
+                            $panel = [0 => 'music', 1 => 'univers', 2 => 'visuals', 3 => 'direction'][$i] ?? null;
+                            $openKey = ['music' => 'pillar_open', 'univers' => 'pillar_view', 'visuals' => 'pillar_watch', 'direction' => 'pillar_explore'][$panel] ?? null;
+                        @endphp
+                        @if ($panel)
+                            <li>
+                                <button type="button" class="mgmt-pillars__btn" data-panel="{{ $panel }}"
+                                    aria-pressed="false" aria-controls="mgmt-stage">
+                                    <span class="mgmt-pillars__num">{{ $num }}</span>
+                                    <span class="mgmt-pillars__name">{{ $pillar }}</span>
+                                    <span class="mgmt-pillars__open">{{ __('site.management.' . $openKey) }} ↓</span>
+                                </button>
+                            </li>
+                        @else
+                            <li>
+                                <span class="mgmt-pillars__num">{{ $num }}</span>
+                                <span class="mgmt-pillars__name">{{ $pillar }}</span>
+                            </li>
+                        @endif
                     @endforeach
                 </ol>
             </section>
 
-            {{-- Galerie photos (public/ston) --}}
-            @if ($gallery->isNotEmpty())
-                <section class="mgmt-gallery">
+            {{-- Scène : Univers (photos) par défaut, les autres panneaux au clic sur leur pilier --}}
+            <section class="mgmt-stage" id="mgmt-stage" data-active="univers">
+                <div class="mgmt-panel" data-panel="univers">
                     <p class="mgmt__label">{{ __('site.management.gallery') }}</p>
-                    <div class="mgmt-gallery__grid">
-                        @foreach ($gallery as $src)
-                            <button type="button" class="mgmt-gallery__item" data-src="{{ $src }}">
-                                <img src="{{ $src }}" alt="{{ __('site.management.photo_alt') }}" loading="lazy">
-                            </button>
-                        @endforeach
+                    @if ($gallery->isNotEmpty())
+                        <div class="mgmt-gallery__grid">
+                            @foreach ($gallery as $src)
+                                <button type="button" class="mgmt-gallery__item" data-src="{{ $src }}">
+                                    <img src="{{ $src }}" alt="{{ __('site.management.photo_alt') }}" loading="lazy">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mgmt-panel" data-panel="music" hidden>
+                    <div class="mgmt-panel__head">
+                        <p class="mgmt__label">{{ __('site.management.music_label') }}</p>
+                        <button type="button" class="mgmt-panel__back" data-panel="univers">{{ __('site.management.back_univers') }}</button>
                     </div>
-                </section>
-            @endif
+                    <div class="mgmt-music">
+                        <div class="mgmt-music__list">
+                            <p class="mgmt-music__sub">{{ __('site.management.tracks_label') }}</p>
+                            <ol class="mgmt-tracks">
+                                @foreach ($tracks as $i => $track)
+                                    <li>
+                                        <button type="button" class="mgmt-track" data-embed="https://open.spotify.com/embed/track/{{ $track['id'] }}?utm_source=generator&theme=0">
+                                            <span class="mgmt-track__num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                            <span class="mgmt-track__title">{{ $track['title'] }}</span>
+                                            <span class="mgmt-track__time">{{ $track['duration'] }}</span>
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ol>
+                            <a class="mgmt-music__spotify" href="https://open.spotify.com/artist/{{ $spotifyArtist }}" target="_blank" rel="noopener">{{ __('site.management.open_spotify') }} ↗</a>
+                        </div>
+                        <div class="mgmt-music__player">
+                            {{-- src posé au premier affichage pour ne pas charger Spotify inutilement --}}
+                            <iframe title="{{ __('site.management.player_title') }}"
+                                data-src="https://open.spotify.com/embed/artist/{{ $spotifyArtist }}?utm_source=generator&theme=0"
+                                width="100%" height="452" frameborder="0" loading="lazy"
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mgmt-panel" data-panel="visuals" hidden>
+                    <div class="mgmt-panel__head">
+                        <p class="mgmt__label">{{ __('site.management.visuals_label') }}</p>
+                        <button type="button" class="mgmt-panel__back" data-panel="univers">{{ __('site.management.back_univers') }}</button>
+                    </div>
+                    <div class="mgmt-music mgmt-music--video">
+                        <div class="mgmt-music__list">
+                            <p class="mgmt-music__sub">{{ __('site.management.videos_label') }}</p>
+                            <ol class="mgmt-tracks">
+                                @foreach ($videos as $i => $video)
+                                    <li>
+                                        <button type="button" class="mgmt-track mgmt-track--video{{ $i === 0 ? ' is-active' : '' }}"
+                                            data-embed="https://www.youtube-nocookie.com/embed/{{ $video['id'] }}?rel=0&autoplay=1">
+                                            <img class="mgmt-track__thumb" src="https://i.ytimg.com/vi/{{ $video['id'] }}/mqdefault.jpg" alt="" loading="lazy">
+                                            <span class="mgmt-track__title">{{ $video['title'] }}</span>
+                                            <span class="mgmt-track__time">{{ $video['duration'] }}</span>
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ol>
+                            <a class="mgmt-music__spotify mgmt-music__spotify--yt" href="{{ $youtubeChannel }}" target="_blank" rel="noopener">{{ __('site.management.open_youtube') }} ↗</a>
+                        </div>
+                        <div class="mgmt-music__player">
+                            <iframe title="{{ __('site.management.video_title') }}"
+                                data-src="https://www.youtube-nocookie.com/embed/{{ $videos->first()['id'] }}?rel=0"
+                                width="100%" frameborder="0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mgmt-panel" data-panel="direction" hidden>
+                    <div class="mgmt-panel__head">
+                        <p class="mgmt__label">{{ __('site.management.direction_label') }}</p>
+                        <button type="button" class="mgmt-panel__back" data-panel="univers">{{ __('site.management.back_univers') }}</button>
+                    </div>
+                    <div class="mgmt-music mgmt-music--links">
+                        <div class="mgmt-music__list">
+                            <p class="mgmt-music__sub">{{ __('site.management.links_label') }}</p>
+                            <ol class="mgmt-tracks">
+                                @foreach ($linktree['links'] as $i => $link)
+                                    <li>
+                                        <a class="mgmt-track mgmt-track--link" href="{{ $link['url'] }}" target="_blank" rel="noopener" style="--brand: {{ $link['color'] }}">
+                                            <span class="mgmt-track__num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                            <span class="mgmt-track__title">{{ $link['name'] }}<small>{{ $link['handle'] }}</small></span>
+                                            <span class="mgmt-track__time" aria-hidden="true">↗</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </div>
+                        {{-- Carte façon Linktree (le vrai Linktree refuse d'être affiché en iframe) --}}
+                        @php $linkPhoto = $photos->first(fn ($src) => str_contains($src, 'IMG_1950')) ?? $heroPhoto; @endphp
+                        <div class="mgmt-linkcard">
+                            <div class="mgmt-linkcard__avatar">
+                                @if ($linkPhoto)
+                                    <img src="{{ $linkPhoto }}" alt="{{ __('site.management.photo_alt') }}" loading="lazy">
+                                @endif
+                            </div>
+                            <p class="mgmt-linkcard__handle">{{ $linktree['handle'] }}</p>
+                            <p class="mgmt-linkcard__name">STON<span>!</span></p>
+                            <ul class="mgmt-linkcard__links">
+                                @foreach ($linktree['links'] as $link)
+                                    <li><a href="{{ $link['url'] }}" target="_blank" rel="noopener" style="--brand: {{ $link['color'] }}">{{ $link['name'] }}</a></li>
+                                @endforeach
+                            </ul>
+                            <a class="mgmt-more mgmt-linkcard__cta" href="{{ $linktree['url'] }}" target="_blank" rel="noopener">{{ __('site.management.open_linktree') }} ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section class="mgmt-cta">
                 <h2 class="mgmt-cta__title">{{ __('site.management.contact') }}</h2>
@@ -483,6 +851,53 @@
                     }
                 });
             }
+
+            // Piliers ↔ panneaux de la scène (Univers, Musique, Projets visuels)
+            var stage = document.getElementById('mgmt-stage');
+            var pillarBtns = document.querySelectorAll('.mgmt-pillars__btn');
+            function showPanel(name, scroll) {
+                stage.dataset.active = name;
+                stage.querySelectorAll('.mgmt-panel').forEach(function (panel) {
+                    var hide = panel.dataset.panel !== name;
+                    // Panneau masqué : recharger son lecteur coupe la lecture en cours
+                    if (hide && !panel.hidden) {
+                        panel.querySelectorAll('iframe[src]').forEach(function (frame) {
+                            frame.src = frame.src.replace('&autoplay=1', '');
+                        });
+                    }
+                    panel.hidden = hide;
+                });
+                pillarBtns.forEach(function (b) {
+                    b.setAttribute('aria-pressed', b.dataset.panel === name ? 'true' : 'false');
+                });
+                // Les lecteurs (Spotify / YouTube) ne se chargent qu'au premier affichage
+                stage.querySelectorAll('.mgmt-panel[data-panel="' + name + '"] iframe[data-src]').forEach(function (frame) {
+                    if (!frame.getAttribute('src')) frame.src = frame.dataset.src;
+                });
+                if (scroll) stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            pillarBtns.forEach(function (b) {
+                b.addEventListener('click', function () {
+                    showPanel(stage.dataset.active === b.dataset.panel ? 'univers' : b.dataset.panel, true);
+                });
+            });
+            stage.querySelectorAll('.mgmt-panel__back').forEach(function (b) {
+                b.addEventListener('click', function () { showPanel(b.dataset.panel, false); });
+            });
+
+            // Clic sur un titre / clip : le charge dans le lecteur de son panneau
+            document.querySelectorAll('.mgmt-track[data-embed]').forEach(function (track) {
+                track.addEventListener('click', function () {
+                    var panel = track.closest('.mgmt-panel');
+                    var player = panel.querySelector('.mgmt-music__player iframe');
+                    panel.querySelectorAll('.mgmt-track.is-active').forEach(function (t) { t.classList.remove('is-active'); });
+                    track.classList.add('is-active');
+                    player.src = track.dataset.embed;
+                    if (window.matchMedia('(max-width: 860px)').matches) {
+                        player.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
 
             var lightbox = document.getElementById('mgmt-lightbox');
             var lightboxImg = lightbox.querySelector('img');

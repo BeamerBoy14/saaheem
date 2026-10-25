@@ -763,7 +763,7 @@
                         <li><a class="gms__item" href="https://on.soundcloud.com/2EgrpTGxALkaIH1A8e" data-label="DJ Set" target="_blank" rel="noopener">DJ Set</a></li>
                         <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="Photo / Video">Photo / Video</a></li>
                         <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="Studio" target="_blank" rel="noopener">Studio</a></li>
-                        <li><a class="gms__item" href="#" data-label="Management">Management</a></li>
+                        <li><a class="gms__item" href="{{ route('management') }}" data-label="Management">Management</a></li>
                         <li>
                             <a class="gms__item gms__item--blue" href="#" id="stay-weird-toggle" data-label="{{ __('site.nav.weird') }}" aria-expanded="false">{{ __('site.nav.weird') }}</a>
                             <ul class="gms__submenu" id="stay-weird-sub" hidden>

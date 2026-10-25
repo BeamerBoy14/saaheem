@@ -181,6 +181,26 @@ Route::view('/merch', 'pages.merch', [
     'activeNav' => 'merch',
 ])->name('merch');
 
+Route::get('/management', function () {
+    $imageExt = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+    // Photos de STON! : public/ston (versionné, déployé avec le code)
+    $photos = collect();
+    $stonDir = public_path('ston');
+    if (File::isDirectory($stonDir)) {
+        $photos = collect(File::files($stonDir))
+            ->filter(fn ($file) => in_array(strtolower($file->getExtension()), $imageExt, true))
+            ->sortBy(fn ($file) => $file->getFilename(), SORT_NATURAL)
+            ->map(fn ($file) => asset('ston/' . $file->getFilename()))
+            ->values();
+    }
+
+    return view('pages.management', [
+        'activeNav' => 'management',
+        'photos'    => $photos,
+    ]);
+})->name('management');
+
 Route::get('/contact', function () {
     return view('pages.contact', ['activeNav' => 'contact']);
 })->name('contact');

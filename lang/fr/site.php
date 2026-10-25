@@ -15,6 +15,7 @@ return [
         'espace'    => 'Espace',
         'merch'     => 'Merch',
         'contact'   => 'Contact me',
+        'management'=> 'Management',
         'weird'     => 'Stay weird',
         'news'      => 'Actualités',
         'open_menu' => 'Ouvrir le menu',
@@ -80,6 +81,33 @@ return [
         'video_playing' => 'Vidéo en cours',
         'pause_video'   => 'Mettre en pause la vidéo',
         'play_video'    => 'Lire la vidéo',
+    ],
+
+    'management' => [
+        'title'     => 'Management — STON!',
+        'kicker'    => 'Artist Management',
+        'location'  => '1420 · Bruxelles',
+        'tags'      => ['Rap', 'Mode', 'Image'],
+        'intro'     => [
+            "Originaire du 1420 et basé à Bruxelles, STON! développe un univers à la croisée du rap, de la mode et de l'image. De la danse à la musique, son parcours reflète une identité en constante évolution, portée par une esthétique sombre, une énergie brute et une vision qui lui est propre.",
+            "Mon rôle est de voir au-delà de la musique. Construire un univers, affirmer une identité et transformer un potentiel en quelque chose de concret. Avec STON!, l'ambition est de développer un projet authentique, cohérent et durable, sans jamais perdre l'essence de l'artiste.",
+        ],
+        'more'      => 'En savoir +',
+        'less'      => 'Réduire',
+        'bio_label' => 'Biographie',
+        'bio'       => [
+            "STON! est un artiste rap underground originaire de Braine-l'Alleud, dans le 1420, et basé à Bruxelles. Son parcours artistique débute par la danse professionnelle, avant d'évoluer vers la production, le chant et finalement le rap. Cette diversité d'expériences nourrit aujourd'hui une approche artistique complète, à la croisée de la musique, de l'image et de la performance.",
+            "En 2017, alors qu'il évolue encore comme beatmaker au sein de son ancien groupe, STON! développe l'idée de faire du 14 une véritable identité artistique et culturelle. Il devient par la suite le premier à porter directement cette identité dans son projet musical et contribue à populariser le terme « 14 » dans l'univers artistique, faisant de lui le précurseur du 14.",
+            "Son univers musical se construit d'abord autour du chant, du R&B et du rap mélodique, avant de prendre un nouveau tournant en 2021 avec la découverte de la DMV.",
+            "Il développe depuis un style basé sur le DMV flow, avec des influences trap, drill, sample et plug. Son univers se distingue par une identité sombre, énergique et authentique.",
+            "STON! a également développé son expérience dans l'image et la mode à travers différents projets de mannequinat pour des marques bruxelloises. Son parcours comprend plusieurs scènes, passages radio et collaborations, qui lui ont permis de construire progressivement son expérience et sa visibilité.",
+            "Aujourd'hui, STON! est accompagné par son management dans le développement de son projet, avec une volonté de structurer son activité autour de la musique, de l'image, des projets visuels et de la direction artistique, avec pour ambition de faire évoluer son univers artistique.",
+        ],
+        'pillars_label' => 'Le management',
+        'pillars'   => ['Musique', 'Image', 'Projets visuels', 'Direction artistique'],
+        'gallery'   => 'Univers',
+        'photo_alt' => 'STON!',
+        'contact'   => 'Booking & contact',
     ],
 
     'contact' => [

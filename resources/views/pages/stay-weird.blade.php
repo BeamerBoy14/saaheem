@@ -63,5 +63,6 @@
             vid.play();
         }, { passive: true });
     </script>
+    @include('partials.page-nav')
 </body>
 </html>

@@ -674,38 +674,6 @@
         .gms__item--blue::before,
         .gms__item--blue::after                     { color: #00b4ff; }
 
-        .gms__submenu {
-            list-style: none;
-            margin: 0;
-            padding: 0 0 0.4rem 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(-6px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-            pointer-events: none;
-        }
-        .gms__submenu.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-        .gms__subitem {
-            font-family: var(--font-retro);
-            font-size: clamp(0.72rem, 2.8vw, 0.95rem);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: rgba(0,180,255,0.55);
-            -webkit-text-fill-color: rgba(0,180,255,0.55);
-            padding: 0.55rem 1rem;
-            display: block;
-            text-align: center;
-            transition: color 0.15s, -webkit-text-fill-color 0.15s;
-        }
-        .gms__subitem:hover { color: #00b4ff; -webkit-text-fill-color: #00b4ff; }
-
         @keyframes gms-pulse {
             0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(228,0,124,0.6)); }
             50%       { opacity: 0.55; filter: drop-shadow(0 0 2px rgba(228,0,124,0.2)); }
@@ -758,22 +726,14 @@
                         <span class="gms__display-text is-hidden" id="gms-display"></span>
                     </div>
                     <ul class="gms__list" id="hero-nav-list">
-                        <li><a class="gms__item" href="{{ route('about') }}"                          data-label="{{ __('site.nav.about') }}">{{ __('site.nav.about') }}</a></li>
-                        <li><a class="gms__item" href="https://youtu.be/vvKvbrI6Wi0?si=Mxx-fVNmc1f5Y6w3" data-label="Interview" target="_blank" rel="noopener">Interview</a></li>
-                        <li><a class="gms__item" href="https://on.soundcloud.com/2EgrpTGxALkaIH1A8e" data-label="DJ Set" target="_blank" rel="noopener">DJ Set</a></li>
-                        <li><a class="gms__item" href="{{ route('moments') }}"                        data-label="Photo / Video">Photo / Video</a></li>
-                        <li><a class="gms__item" href="https://www.instagram.com/avantgarde_studios" data-label="Studio" target="_blank" rel="noopener">Studio</a></li>
+                        <li><a class="gms__item" href="{{ route('about') }}" data-label="{{ __('site.nav.about') }}">{{ __('site.nav.about') }}</a></li>
+                        <li><a class="gms__item gms__item--blue" href="https://stayweird-fr.myshopify.com/" data-label="{{ __('site.nav.weird') }}" target="_blank" rel="noopener">{{ __('site.nav.weird') }}</a></li>
+                        <li><a class="gms__item" href="{{ route('moments') }}" data-label="Photo / Video">Photo / Video</a></li>
+                        <li><a class="gms__item gms__item--blue" href="https://stayweird-fr.myshopify.com/blogs/dvd" data-label="Interview" target="_blank" rel="noopener">Interview</a></li>
                         <li><a class="gms__item" href="{{ route('management') }}" data-label="Management">Management</a></li>
-                        <li>
-                            <a class="gms__item gms__item--blue" href="#" id="stay-weird-toggle" data-label="{{ __('site.nav.weird') }}" aria-expanded="false">{{ __('site.nav.weird') }}</a>
-                            <ul class="gms__submenu" id="stay-weird-sub" hidden>
-                                <li><a class="gms__subitem" href="{{ route('home') }}">Accueil</a></li>
-                                <li><a class="gms__subitem" href="{{ route('merch') }}">Merch</a></li>
-                                <li><a class="gms__subitem" href="#">Event</a></li>
-                                <li><a class="gms__subitem" href="#">DVD</a></li>
-                            </ul>
-                        </li>
-                        <li style="margin-top: clamp(1.2rem, 4vh, 2rem);"><a class="gms__item" href="{{ route('contact') }}"                        data-label="{{ __('site.nav.contact') }}">{{ __('site.nav.contact') }}</a></li>
+                        <li><a class="gms__item" href="https://youtube.com/@yungxboy?si=-au8fue6uFA_d6zf" data-label="YouTube" target="_blank" rel="noopener">YouTube</a></li>
+                        {{-- Mersh : boutique Stay Weird sur Shopify --}}
+                        <li><a class="gms__item gms__item--blue" href="https://stayweird-fr.myshopify.com/collections/all" data-label="Mersh" target="_blank" rel="noopener">Mersh</a></li>
                     </ul>
                 </div>
             </nav>
@@ -887,39 +847,13 @@
     </div>
     <script>
     (function () {
-        /* ── Stay Weird sous-menu ── */
-        var swToggle = document.getElementById('stay-weird-toggle');
-        var swSub    = document.getElementById('stay-weird-sub');
-        if (swToggle && swSub) {
-            swToggle.addEventListener('click', function (e) {
-                e.preventDefault();
-                var opening = swSub.hidden;
-                if (opening) {
-                    swSub.hidden = false;
-                    requestAnimationFrame(function () {
-                        requestAnimationFrame(function () {
-                            swSub.classList.add('is-visible');
-                        });
-                    });
-                } else {
-                    swSub.classList.remove('is-visible');
-                    swSub.addEventListener('transitionend', function hide() {
-                        swSub.hidden = true;
-                        swSub.removeEventListener('transitionend', hide);
-                    });
-                }
-                swToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
-            });
-        }
-    })();
-    </script>
-    <script>
-    (function () {
         var trigger = document.getElementById('blog-gate-trigger-welcome');
         var gate    = document.getElementById('blog-gate-welcome');
         var input   = document.getElementById('blog-gate-input-welcome');
         var error   = document.getElementById('blog-gate-error-welcome');
         var URL     = 'https://www.tumblr.com/saaheemwrld';
+        // Le lien Blog n'est plus dans le menu d'accueil : rien à brancher
+        if (!trigger || !gate) return;
 
         function openGate(e) {
             e.preventDefault();

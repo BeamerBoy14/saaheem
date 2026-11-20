@@ -106,7 +106,7 @@
         var x = -100;
         var y = -100;
         var visible = false;
-        var hoverSelector = 'a, button, summary, label[for], .about-timeline__btn, .about-cta, .btn-outline, .nav-toggle, .hero-lets-go, .hero-nav a, [role="button"], [role="tab"]';
+        var hoverSelector = 'a, button, summary, label[for], .about-timeline__btn, .about-cta, .btn-outline, .hero-lets-go, .hero-nav a, [role="button"], [role="tab"]';
 
         function move(clientX, clientY) {
             x = clientX;

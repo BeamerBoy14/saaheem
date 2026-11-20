@@ -15,7 +15,7 @@
         .merch-hero {
             position: relative;
             flex: 1;
-            min-height: calc(100dvh - 72px);
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;

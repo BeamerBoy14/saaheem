@@ -19,6 +19,9 @@ return [
         'weird'     => 'Stay weird',
         'news'      => 'Actualités',
         'open_menu' => 'Ouvrir le menu',
+        'back'      => 'Retour',
+        'menu'      => 'Menu',
+        'home'      => 'Accueil',
         'socials'   => 'Réseaux sociaux',
     ],
 

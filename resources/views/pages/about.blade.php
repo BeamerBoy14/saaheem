@@ -7,539 +7,519 @@
     @include('partials.dark-page-head')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,300&display=swap" rel="stylesheet">
     <style>
-        --about-font: 'DM Sans', system-ui, sans-serif;
-        /* ── Header stays above fixed cards ── */
-        .site-header { position: relative; z-index: 100; }
-
-        .about-page { flex: 1; }
-
-        /* ── Spacer creates scroll height (3 cards × 100vh) ── */
-        .about-spacer { height: 300vh; }
-
-        /* ── Fixed stack: always covers the viewport ── */
-        .about-fixed {
-            position: fixed;
-            inset: 0;
-            z-index: 5;
-            pointer-events: none;
+        /* Rappel : le thème rétro fixe html à 10px, donc 1rem = 10px ici */
+        body.page-about { background: #0b0709; }
+        .ab {
+            flex: 1;
+            font-family: 'DM Sans', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            overflow: clip;
+        }
+        /* Titres : pas de dégradé "fire" du thème rétro */
+        .ab h1,
+        .ab h2 {
+            background-image: none;
+            -webkit-text-fill-color: currentColor;
+        }
+        .ab__wrap {
+            width: min(1180px, calc(100% - 4.8rem));
+            margin-inline: auto;
+        }
+        @media (max-width: 640px) {
+            .ab__wrap { width: calc(100% - 3.2rem); }
         }
 
-        /* ── One card = full viewport ── */
-        .about-card {
-            position: absolute;
-            inset: 0;
-            pointer-events: auto;
-            will-change: transform, filter, opacity;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        /* Apparition au scroll */
+        .ab-reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2, .7, .2, 1);
+        }
+        .ab-reveal.is-in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .ab-reveal { opacity: 1; transform: none; transition: none; }
         }
 
-        /* ── Backgrounds ── */
-        .about-card__bg {
-            position: absolute;
-            inset: 0;
+        /* ── 1. Hero vidéo (sticky : la section suivante passe par-dessus) ── */
+        .ab-hero {
+            position: sticky;
+            top: 0;
             z-index: 0;
+            height: 100svh;
+            min-height: 480px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            color: #fff;
         }
-        .about-card__bg img,
-        .about-card__bg video {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .about-card__overlay {
+        .ab-hero__video {
             position: absolute;
             inset: 0;
-            z-index: 1;
-        }
-
-        /* ── Content wrapper ── */
-        .about-card__body {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: clamp(1rem, 3vh, 1.75rem);
-            padding: 2rem 1.5rem;
-            width: min(900px, 100%);
-        }
-        .about-card__body--split {
-            flex-direction: row;
-            flex-wrap: wrap;
-            text-align: left;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(2rem, 6vw, 5rem);
-        }
-        .about-card__body--split-rev {
-            flex-direction: row-reverse;
-        }
-        @media (max-width: 680px) {
-            .about-card__body--split,
-            .about-card__body--split-rev { flex-direction: column; text-align: center; align-items: center; }
-            .about-card--0 .about-card__body {
-                width: 100%;
-                max-width: 100vw;
-                padding: 0;
-                gap: 1.5rem;
-                overflow: hidden;
-            }
-            .about-card--0 .about-card__photo {
-                width: 100vw;
-                max-width: 100vw;
-                height: 55vh;
-                aspect-ratio: auto;
-                border-radius: 0;
-                box-shadow: none;
-            }
-            .about-card--0 .about-card__copy {
-                padding: 0 1.5rem;
-            }
-            .about-card__name {
-                font-size: clamp(2.5rem, 10vw, 4rem);
-            }
-        }
-
-        /* ── Scroll hint ── */
-        .about-scroll-hint {
-            position: absolute;
-            bottom: clamp(1.5rem, 4vh, 2.5rem);
-            right: clamp(1.5rem, 3vw, 2.5rem);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            pointer-events: none;
-        }
-        .about-scroll-hint__label {
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: #e4007c;
-        }
-        .about-scroll-hint__line {
-            width: 2px;
-            height: 60px;
-            background: #e4007c;
-            transform-origin: top;
-            animation: hint-drop 1.6s ease-in-out infinite;
-        }
-
-        /* ── Photo frame ── */
-        .about-card__photo {
-            flex-shrink: 0;
-            width: clamp(200px, 32vw, 380px);
-            aspect-ratio: 3/4;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 16px 48px rgba(0,0,0,.08);
-        }
-        /* Card 0 : contrainte par la hauteur pour ne pas déborder */
-        .about-card--0 .about-card__photo {
-            width: auto;
-            height: clamp(300px, 72vh, 82vh);
-        }
-        .about-card--0 .about-card__body {
-            width: min(1100px, calc(100% - 3rem));
-            gap: clamp(2rem, 5vw, 5rem);
-        }
-        .about-card__photo img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            display: block;
+            filter: saturate(0.85) contrast(1.05);
+        }
+        .ab-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(11, 7, 9, 0.15) 0%, rgba(11, 7, 9, 0.1) 40%, rgba(11, 7, 9, 0.85) 100%);
+        }
+        .ab-hero__body {
+            position: relative;
+            z-index: 1;
+            padding-bottom: clamp(4rem, 8vh, 8rem);
+        }
+        .ab-hero__kicker {
+            display: inline-block;
+            margin: 0 0 1.6rem;
+            padding: 0.4rem 0.96rem;
+            background: var(--magenta);
+            font-size: clamp(1.28rem, 1.5vw, 1.52rem);
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        .ab-hero__title {
+            margin: 0;
+            max-width: 14ch;
+            font-size: clamp(4.16rem, 7.5vw, 10.4rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 0.95;
+            color: #fff;
+        }
+        .ab-hero__meta {
+            margin: 2rem 0 0;
+            font-size: clamp(1.52rem, 1.6vw, 1.76rem);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .ab-hero__scroll {
+            position: absolute;
+            right: clamp(2rem, 3vw, 4rem);
+            bottom: clamp(4rem, 8vh, 8rem);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        .ab-hero__scroll::after {
+            content: '';
+            width: 2px;
+            height: 56px;
+            background: var(--magenta);
+            transform-origin: top;
+            animation: ab-drop 1.6s ease-in-out infinite;
+        }
+        @keyframes ab-drop {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.4; }
+            50%      { transform: scaleY(1);   opacity: 1; }
+        }
+        @media (max-width: 640px) {
+            .ab-hero__scroll { display: none; }
         }
 
-        /* ── Text elements ── */
-        .about-card__copy { flex: 1; min-width: min(240px, 100%); display: flex; flex-direction: column; gap: 1rem; }
-        .about-card__kicker {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(1rem, 2.2vw, 1.4rem);
-            font-weight: 500;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #e4007c;
-        }
-        .about-card__title {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(4rem, 18vw, 10rem);
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            line-height: 0.9;
-            color: #fff;
-            text-transform: uppercase;
-            text-shadow: 0 4px 40px rgba(0,0,0,.4);
-        }
-        .about-card__name {
-            position: absolute;
-            top: clamp(1.2rem, 3.5vh, 2.5rem);
-            left: clamp(1.5rem, 4vw, 3rem);
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(4rem, 12vw, 9rem);
-            font-weight: 300;
-            letter-spacing: -0.03em;
-            line-height: 1;
-            z-index: 3;
-            background: linear-gradient(135deg, #ff80c0 0%, #e4007c 35%, #ff55aa 60%, #ffb3d9 85%, #e4007c 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
-        .about-card__heading {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            line-height: 1.05;
+        /* Tout ce qui suit le hero recouvre la vidéo */
+        .ab-sheet {
+            position: relative;
+            z-index: 1;
+            background: #fff;
             color: #111;
         }
-        .about-card__sub {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(0.72rem, 2vw, 0.85rem);
-            font-weight: 400;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,.45);
-        }
-        .about-card__location {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(1rem, 2.2vw, 1.4rem);
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(0,0,0,.38);
-        }
-        .about-card__text {
-            margin: 0;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(1.45rem, 3.2vw, 2rem);
-            font-weight: 300;
-            line-height: 1.7;
-            color: rgba(0,0,0,.55);
-            max-width: 38rem;
-        }
-        .about-card__text--bold { font-weight: 600; color: #111; }
 
-        /* ── Card 1: grid 2×2 ── */
-        .about-card__grid {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
+        /* ── 2. Nom géant ── */
+        .ab-name {
+            padding: clamp(4rem, 6vw, 7.2rem) 0 clamp(1.6rem, 3vw, 3.2rem);
+        }
+        .ab-name__tag {
+            display: inline-block;
+            margin: 0 0 0.8rem;
+            padding: 0.32rem 0.96rem;
+            background: var(--magenta);
+            color: #fff;
+            font-size: clamp(1.76rem, 2.4vw, 2.56rem);
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -0.01em;
+        }
+        .ab-name__word {
+            margin: 0;
+            font-size: clamp(4.8rem, 22.5vw, 28.5rem); /* ≈ pleine largeur du conteneur (DM Sans 800 ≈ 4.1em) */
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            line-height: 0.82;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .ab-name__word { font-size: 22vw; }
+        }
+
+        /* ── 3. Bandeau qui défile ── */
+        .ab-marquee {
+            overflow: hidden;
+            background: var(--magenta);
+            color: #fff;
+            padding: 1.44rem 0;
+        }
+        .ab-marquee__track {
+            display: flex;
+            width: max-content;
+            animation: ab-marquee 28s linear infinite;
+        }
+        .ab-marquee__track span {
+            padding-right: 4rem;
+            font-size: clamp(1.92rem, 3vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        @keyframes ab-marquee {
+            to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ab-marquee__track { animation: none; }
+        }
+
+        /* ── 4. Blocs photo + phrase ── */
+        .ab-split {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: clamp(0.25rem, 0.6vw, 0.5rem);
-            padding: clamp(0.25rem, 0.6vw, 0.5rem);
+            min-height: min(88vh, 820px);
+            border-bottom: 1px solid #eee;
         }
-        .about-card__grid-item {
-            overflow: hidden;
-            min-height: 0;
-        }
-        .about-card__grid-item img {
-            width: 100%; height: 100%;
+        .ab-split__media { position: relative; overflow: hidden; }
+        .ab-split__media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            display: block;
-            transition: transform 0.6s ease;
+            transition: transform 1.2s ease;
         }
-        .about-card__grid-item:hover img {
-            transform: scale(1.03);
-        }
-
-        /* ── Cards 0 & 1: fond blanc ── */
-        .about-card--0 { background: #fff; }
-        .about-card--0 .about-card__overlay {
-            background:
-                radial-gradient(ellipse 70% 80% at 5% 65%, rgba(255,140,195,.38) 0%, rgba(255,180,220,.12) 40%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 8% 62%, rgba(255,100,170,.22) 0%, transparent 50%);
-        }
-        .about-card--1 { background: #fff; }
-        .about-card--1 .about-card__overlay {
-            background:
-                radial-gradient(ellipse 70% 80% at 95% 35%, rgba(255,140,195,.36) 0%, rgba(255,180,220,.10) 40%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 92% 38%, rgba(255,100,170,.20) 0%, transparent 50%);
-        }
-
-        /* ── Card 2: fond blanc ── */
-        .about-card--2 { background: #fafafa; }
-        .about-card--2 .about-card__overlay {
-            background:
-                radial-gradient(ellipse 65% 65% at 50% 90%, rgba(255,140,195,.32) 0%, rgba(255,180,220,.10) 45%, transparent 70%),
-                radial-gradient(ellipse 35% 35% at 50% 88%, rgba(255,100,170,.18) 0%, transparent 50%);
-        }
-        .about-card--2 .about-card__heading { color: #111; }
-        .about-card--2 .about-card__text { color: rgba(0,0,0,.4); }
-
-        @keyframes hint-drop {
-            0%,100% { transform: scaleY(.6) translateY(-5px); opacity: .4; }
-            50%      { transform: scaleY(1) translateY(0);     opacity: 1; }
-        }
-
-        /* ── Card 2: body texte ── */
-        .about-card__body--text {
-            text-align: center;
-            align-items: center;
-            max-width: 680px;
-            gap: clamp(0.9rem, 2vh, 1.4rem);
-        }
-        .about-card__text--lead {
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
-            font-weight: 300;
-            line-height: 1.35;
-            color: #111;
-            margin: 0;
-        }
-        .about-card__links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem 1.4rem;
-            margin-top: 0.4rem;
-        }
-        .about-card__link {
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(0.72rem, 1.4vw, 0.88rem);
-            font-weight: 500;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: #111;
-            border-bottom: 1px solid rgba(0,0,0,.22);
-            padding-bottom: 2px;
-            transition: color 0.2s, border-color 0.2s;
-        }
-        .about-card__link:visited { color: #111; }
-        .about-card__link:hover,
-        .about-card__link:focus { color: #e4007c; border-color: #e4007c; }
-
-        /* ── Back button ── */
-        .about-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.7rem 1.6rem;
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: 0.72rem;
-            font-weight: 400;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #111;
-            background: transparent;
-            border: 1px solid rgba(0,0,0,.18);
-            cursor: pointer;
-            transition: background .2s, border-color .2s, color .2s;
-        }
-        .about-back:hover {
-            background: #e4007c;
-            border-color: #e4007c;
-            color: #fff;
-        }
-        .about-back--lg {
-            padding: 1rem 5rem;
-            font-size: 0.82rem;
-            letter-spacing: 0.22em;
-            margin-top: clamp(1.5rem, 4vh, 3rem);
-        }
-
-        /* ── Progress dots ── */
-        .about-dots {
-            position: fixed;
-            right: clamp(1rem, 3vw, 1.75rem);
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 50;
+        .ab-split:hover .ab-split__media img { transform: scale(1.03); }
+        .ab-split__copy {
             display: flex;
             flex-direction: column;
-            gap: 0.55rem;
-            pointer-events: none;
+            justify-content: flex-end;
+            gap: 2rem;
+            padding: clamp(3.2rem, 5vw, 7.2rem);
         }
-        .about-dots__dot {
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: rgba(0,0,0,.18);
-            transition: background .3s, transform .3s;
+        .ab-split__num {
+            font-size: 1.36rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            color: var(--magenta);
         }
-        .about-dots__dot.is-active {
-            background: #e4007c;
-            transform: scale(1.5);
+        .ab-split__line {
+            margin: 0;
+            font-size: clamp(3.04rem, 4vw, 5.44rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.02;
+            text-transform: uppercase;
+            color: #111;
+        }
+        .ab-split__text {
+            margin: 0;
+            max-width: 48rem;
+            font-size: clamp(1.68rem, 1.6vw, 1.92rem);
+            font-weight: 300;
+            line-height: 1.7;
+            color: rgba(0, 0, 0, 0.6);
+        }
+        .ab-split--rev .ab-split__media { order: 2; }
+        .ab-split--rev .ab-split__copy { text-align: right; align-items: flex-end; }
+        @media (max-width: 760px) {
+            .ab-split { grid-template-columns: 1fr; min-height: 0; }
+            .ab-split__media { aspect-ratio: 4 / 5; }
+            .ab-split--rev .ab-split__media { order: 0; }
+            .ab-split--rev .ab-split__copy { text-align: left; align-items: flex-start; }
+        }
+
+        /* ── 5. Stay Weird plein écran ── */
+        .ab-full {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+        .ab-full__img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .ab-full::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(11, 7, 9, 0.85) 0%, rgba(11, 7, 9, 0.35) 60%, rgba(11, 7, 9, 0.1) 100%);
+        }
+        .ab-full__body { position: relative; z-index: 1; }
+        .ab-full__kicker {
+            margin: 0 0 1.6rem;
+            font-size: 1.36rem;
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--magenta);
+        }
+        .ab-full__title {
+            margin: 0 0 2rem;
+            font-size: clamp(4.8rem, 9vw, 12rem);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            color: #fff;
+        }
+        .ab-full__text {
+            margin: 0 0 3.2rem;
+            max-width: 48rem;
+            font-size: clamp(1.68rem, 1.7vw, 2rem);
+            font-weight: 300;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .ab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.96rem;
+            padding: 1.44rem 2.56rem;
+            border-radius: 999px;
+            background: var(--magenta);
+            color: #fff;
+            font-size: 1.44rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(228, 0, 124, 0.35);
+        }
+
+        /* ── 6. Aujourd'hui + liens ── */
+        .ab-now {
+            padding: clamp(6.4rem, 10vh, 11.2rem) 0 clamp(4.8rem, 8vh, 8rem);
+        }
+        .ab-now__grid {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: clamp(3.2rem, 6vw, 8rem);
+            align-items: center;
+        }
+        .ab-now__photo {
+            aspect-ratio: 3 / 4;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .ab-now__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .ab-now__lead {
+            margin: 0 0 2.4rem;
+            font-size: clamp(2.56rem, 3.2vw, 4.16rem);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            color: #111;
+        }
+        .ab-now__roles {
+            margin: 0 0 3.2rem;
+            font-size: clamp(1.52rem, 1.5vw, 1.68rem);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+            text-transform: uppercase;
+            color: var(--magenta);
+        }
+        .ab-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.96rem;
+            margin: 0 0 2.4rem;
+            padding: 0;
+            list-style: none;
+        }
+        .ab-links a {
+            display: inline-block;
+            padding: 0.96rem 1.76rem;
+            border: 1.5px solid #111;
+            border-radius: 999px;
+            color: #111;
+            font-size: 1.44rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .ab-links a:hover {
+            background: var(--magenta);
+            border-color: var(--magenta);
+            color: #fff;
+        }
+        .ab-now__base {
+            margin: 0;
+            font-size: 1.44rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 760px) {
+            .ab-now__grid { grid-template-columns: 1fr; }
+            .ab-now__photo { max-width: 420px; }
         }
     </style>
 @endpush
 
 @section('content')
-<div class="about-page">
+<main class="ab" role="main">
 
-    {{-- Progress dots --}}
-    <div class="about-dots" aria-hidden="true" id="about-dots">
-        <span class="about-dots__dot"></span>
-        <span class="about-dots__dot"></span>
-        <span class="about-dots__dot"></span>
-    </div>
 
-    {{-- Spacer = scroll height --}}
-    <div class="about-spacer" id="about-spacer"></div>
+    {{-- 1. Hero vidéo --}}
+    <section class="ab-hero">
+        <video class="ab-hero__video" autoplay muted loop playsinline preload="metadata" poster="{{ asset('saaheem/1.2.jpg') }}" aria-hidden="true">
+            <source src="{{ asset('videos/bk.mp4') }}" type="video/mp4">
+        </video>
+        <div class="ab__wrap ab-hero__body">
+            <p class="ab-hero__kicker">Artist / Producer / Creative</p>
+            <h1 class="ab-hero__title">Self-taught. I make things happen.</h1>
+            <p class="ab-hero__meta">Born in France &middot; Based in Brussels</p>
+        </div>
+        <span class="ab-hero__scroll" aria-hidden="true">Scroll</span>
+    </section>
 
-    {{-- Fixed cards stack --}}
-    <div class="about-fixed" id="about-fixed">
+    <div class="ab-sheet">
 
-        {{-- Card 0 --}}
-        <div class="about-card about-card--0" id="about-card-0">
-            <div class="about-card__overlay"></div>
-            <h2 class="about-card__name">SAAHEEM</h2>
-            <div class="about-scroll-hint" aria-hidden="true">
-                <span class="about-scroll-hint__label">Scroll</span>
-                <span class="about-scroll-hint__line"></span>
+        {{-- 2. Nom géant --}}
+        <section class="ab-name">
+            <div class="ab__wrap">
+                <p class="ab-name__tag ab-reveal">Be you.</p>
+                <h2 class="ab-name__word ab-reveal">SAAHEEM</h2>
             </div>
-            <div class="about-card__body about-card__body--split">
-                <div class="about-card__photo">
-                    <img src="{{ asset('saaheem/1.1.jpg') }}" alt="Saaheem" loading="lazy">
-                </div>
-                <div class="about-card__copy">
-                    <p class="about-card__kicker">Artist / Producer / Creative</p>
-                    <p class="about-card__location">Born in France &middot; Based in Brussels</p>
-                    <p class="about-card__text">I'm a self-taught artist, producer</p>
-                    <p class="about-card__text">I move between music, visuals, fashion, events and culture but most of all, I make things happen</p>
-                    <p class="about-card__text">I shoot. I DJ. I produce. I create.<br>I plug artists, connect people, find opportunities and build bridges between different scenes and cities</p>
-                </div>
+        </section>
+
+        {{-- 3. Bandeau --}}
+        <div class="ab-marquee" aria-hidden="true">
+            <div class="ab-marquee__track">
+                @for ($i = 0; $i < 2; $i++)
+                    <span>Producer &bull; DJ &bull; Shooter &bull; Connector &bull; Creative direction &bull; Events &bull; Artist development &bull;</span>
+                @endfor
             </div>
         </div>
 
-        {{-- Card 1 — pleine page --}}
-        <div class="about-card about-card--1" id="about-card-1">
-            <div class="about-card__bg">
-                <img src="{{ asset('saaheem/1.2.jpg') }}" alt="" loading="lazy">
+        {{-- 4. Blocs photo + phrase --}}
+        <section class="ab-split">
+            <div class="ab-split__media">
+                <img src="{{ asset('saaheem/1.1.jpg') }}" alt="Saaheem" loading="lazy">
             </div>
-            <div class="about-card__overlay"></div>
-        </div>
+            <div class="ab-split__copy ab-reveal">
+                <span class="ab-split__num">01</span>
+                <p class="ab-split__line">I shoot. I DJ. I produce. I create.</p>
+                <p class="ab-split__text">I move between music, visuals, fashion, events and culture, but most of all, I make things happen.</p>
+            </div>
+        </section>
 
-        {{-- Card 2 — Bio suite + liens --}}
-        <div class="about-card about-card--2" id="about-card-2">
-            <div class="about-card__overlay"></div>
-            <div class="about-card__body about-card__body--text">
-                <p class="about-card__text--lead">I've always been the type to figure things out myself</p>
-                <p class="about-card__text">I'm also the founder of Stay Weird, a creative universe built around music, image, people and self-expression</p>
-                <p class="about-card__text">Today, I work with artists, studios, labels, models, brands, media and creative teams helping create projects, develop artists, build connections and bring ideas to life</p>
-                <p class="about-card__text about-card__text--bold">Artist / Producer / Creative Direction / Visuals / Events / Artist Development</p>
-                <p class="about-card__location">Based in Brussels &middot; Connected internationally</p>
-                <div class="about-card__links">
-                    <a href="https://youtube.com/@yungxboy?si=-au8fue6uFA_d6zf" target="_blank" rel="noopener" class="about-card__link">YouTube</a>
-                    <a href="https://on.soundcloud.com/aXUMABrPf4hNvEGhhr" target="_blank" rel="noopener" class="about-card__link">SoundCloud</a>
-                    <a href="#" id="about-blog-trigger" class="about-card__link">Blog</a>
-                    <a href="https://www.instagram.com/saaheem__?stkn=MTd6ZWF5MnFucjE0MQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="about-card__link">Instagram</a>
+        <section class="ab-split ab-split--rev">
+            <div class="ab-split__media">
+                <img src="{{ asset('saaheem/1.4.jpg') }}" alt="Saaheem" loading="lazy">
+            </div>
+            <div class="ab-split__copy ab-reveal">
+                <span class="ab-split__num">02</span>
+                <p class="ab-split__line">I've always been the type to figure things out myself.</p>
+                <p class="ab-split__text">Self-taught artist and producer. No shortcuts, just curiosity and work.</p>
+            </div>
+        </section>
+
+        <section class="ab-split">
+            <div class="ab-split__media">
+                <img src="{{ asset('saaheem/1.3.jpg') }}" alt="Saaheem" loading="lazy">
+            </div>
+            <div class="ab-split__copy ab-reveal">
+                <span class="ab-split__num">03</span>
+                <p class="ab-split__line">I plug artists. I connect people.</p>
+                <p class="ab-split__text">I find opportunities and build bridges between different scenes and cities.</p>
+            </div>
+        </section>
+
+        {{-- 5. Stay Weird --}}
+        <section class="ab-full">
+            <img class="ab-full__img" src="{{ asset('saaheem/1.5.jpg') }}" alt="" loading="lazy">
+            <div class="ab__wrap ab-full__body ab-reveal">
+                <p class="ab-full__kicker">Founder</p>
+                <h2 class="ab-full__title">Stay weird.</h2>
+                <p class="ab-full__text">A creative universe built around music, image, people and self-expression.</p>
+                <a class="ab-btn" href="{{ route('stay-weird') }}">Stay weird &rarr;</a>
+            </div>
+        </section>
+
+        {{-- 6. Aujourd'hui + liens --}}
+        <section class="ab-now">
+            <div class="ab__wrap ab-now__grid">
+                <div class="ab-now__photo ab-reveal">
+                    <img src="{{ asset('saaheem/1.2.jpg') }}" alt="Saaheem" loading="lazy">
                 </div>
-                <a href="{{ route('home') }}" class="about-back about-back--lg">Menu</a>
+                <div class="ab-reveal">
+                    <p class="ab-now__lead">Today, I work with artists, studios, labels, models, brands, media and creative teams, helping create projects, develop artists, build connections and bring ideas to life.</p>
+                    <p class="ab-now__roles">Artist / Producer / Creative direction / Visuals / Events / Artist development</p>
+                    <ul class="ab-links">
+                        <li><a href="https://youtu.be/vvKvbrI6Wi0?si=Mxx-fVNmc1f5Y6w3" target="_blank" rel="noopener">Interview</a></li>
+                        <li><a href="https://on.soundcloud.com/2EgrpTGxALkaIH1A8e" target="_blank" rel="noopener">DJ Set</a></li>
+                        <li><a href="https://youtube.com/@yungxboy?si=-au8fue6uFA_d6zf" target="_blank" rel="noopener">YouTube</a></li>
+                        <li><a href="https://on.soundcloud.com/aXUMABrPf4hNvEGhhr" target="_blank" rel="noopener">SoundCloud</a></li>
+                        <li><a href="https://www.instagram.com/saaheem__" target="_blank" rel="noopener">Instagram</a></li>
+                        <li><a href="#" data-blog-gate>Blog</a></li>
+                        <li><a href="{{ route('contact') }}">Contact</a></li>
+                    </ul>
+                    <p class="ab-now__base">Based in Brussels &middot; Connected internationally</p>
+                </div>
             </div>
-        </div>
+        </section>
 
-    </div>{{-- .about-fixed --}}
-</div>
+    </div>{{-- .ab-sheet --}}
+</main>
 @endsection
 
 @push('scripts')
 <script>
 (function () {
-    /* ── Blog gate (même gate que le header) ── */
-    var aboutBlogTrigger = document.getElementById('about-blog-trigger');
-    var blogGateTrigger  = document.getElementById('blog-gate-trigger');
-    if (aboutBlogTrigger && blogGateTrigger) {
-        aboutBlogTrigger.addEventListener('click', function (e) {
-            e.preventDefault();
-            blogGateTrigger.click();
-        });
+    /* ── Apparition des blocs au scroll ── */
+    var items = document.querySelectorAll('.ab-reveal');
+    if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('is-in'); });
+        return;
     }
-
-    /* ── Back ── */
-    var backBtn = document.getElementById('about-back');
-    if (backBtn) {
-        backBtn.addEventListener('click', function () {
-            window.history.length > 1 ? window.history.back() : (window.location.href = '{{ route('home') }}');
-        });
-    }
-
-    /* ── Scroll-driven stacked cards ── */
-    var spacer   = document.getElementById('about-spacer');
-    var cards    = Array.from(document.querySelectorAll('.about-card'));
-    var dots     = Array.from(document.querySelectorAll('.about-dots__dot'));
-    var numCards = cards.length;
-    var spacerTop; /* stable document offset */
-
-    function measureSpacer() {
-        spacerTop = spacer.getBoundingClientRect().top + window.scrollY;
-    }
-
-    function update() {
-        var scrolled = window.scrollY - spacerTop; /* < 0 before track */
-        var vh       = window.innerHeight;
-
-        cards.forEach(function (card, i) {
-            /* p = progress within this card's slot
-               p < 0  → card not yet reached
-               p 0-1  → card is active
-               p > 1  → card passed (blur behind) */
-            var p = scrolled / vh - i;
-
-            /* Card 0 always fully visible before we enter the track */
-            if (i === 0 && scrolled < 0) {
-                card.style.transform = 'translateY(0)';
-                card.style.filter    = 'blur(0px)';
-                card.style.opacity   = '1';
-                card.style.zIndex    = '10';
-                return;
-            }
-
-            if (p < -0.25) {
-                /* Waiting below — hidden */
-                card.style.transform = 'translateY(100px)';
-                card.style.opacity   = '0';
-                card.style.filter    = 'blur(0px)';
-                card.style.zIndex    = String(10 + i);
-            } else if (p < 0) {
-                /* Rising into view */
-                var t = (p + 0.25) / 0.25;          /* 0 → 1 */
-                card.style.transform = 'translateY(' + Math.round((1 - t) * 100) + 'px)';
-                card.style.opacity   = String(t);
-                card.style.filter    = 'blur(0px)';
-                card.style.zIndex    = String(10 + i);
-            } else if (p <= 1) {
-                /* Active */
-                card.style.transform = 'translateY(0)';
-                card.style.opacity   = '1';
-                card.style.filter    = 'blur(0px)';
-                card.style.zIndex    = String(10 + i);
-            } else {
-                /* Past — blur & fade, stays in place */
-                var excess  = p - 1;
-                var blur    = Math.min(excess * 24, 24);
-                var opacity = Math.max(1 - excess * 0.45, 0.15);
-                card.style.transform = 'translateY(0)';
-                card.style.opacity   = String(opacity);
-                card.style.filter    = 'blur(' + blur + 'px)';
-                card.style.zIndex    = String(i);
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
             }
         });
-
-        /* Active dot */
-        var active = Math.min(Math.max(Math.round(Math.max(scrolled, 0) / vh), 0), numCards - 1);
-        dots.forEach(function (d, i) { d.classList.toggle('is-active', i === active); });
-    }
-
-    measureSpacer();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', function () { measureSpacer(); update(); }, { passive: true });
-    update();
+    }, { threshold: 0.15 });
+    items.forEach(function (el) { io.observe(el); });
 })();
 </script>
 @endpush

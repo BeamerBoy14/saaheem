@@ -67,3 +67,6 @@ jobs:
             MAIL_FROM_ADDRESS=noreply@saaheem.com
             MAIL_FROM_NAME=SAAHEEM
             CONTACT_EMAIL=saaheem@outlook.com
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}

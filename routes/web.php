@@ -61,23 +61,25 @@ Route::get('/moments', function () {
     $mapFile = function ($file, string $folder, string $category = 'uncategorized') use ($imageExt, $videoExt) {
         $ext = strtolower($file->getExtension());
 
+        $url = asset($folder . '/' . $file->getFilename());
+
         if (in_array($ext, $imageExt, true)) {
             return [
                 'type'     => 'image',
-                'file'     => $file->getFilename(),
-                'folder'   => $folder,
                 'category' => $category,
-                'mtime'    => $file->getMTime(),
+                'src'      => $url,
+                'full'     => $url,
+                'poster'   => null,
             ];
         }
 
         if (in_array($ext, $videoExt, true) && strtolower($file->getFilename()) !== 'bk.mp4') {
             return [
                 'type'     => 'video',
-                'file'     => $file->getFilename(),
-                'folder'   => $folder,
                 'category' => $category,
-                'mtime'    => $file->getMTime(),
+                'src'      => $url,
+                'full'     => $url,
+                'poster'   => null,
             ];
         }
 
@@ -129,6 +131,9 @@ Route::get('/moments', function () {
             );
         }
     }
+
+    // Médias déposés sur Cloudinary par le propriétaire du site (si configuré)
+    $media = $media->merge(\App\Support\CloudinaryMoments::media());
 
     // Sépare photos et vidéos, mélange chaque groupe
     $videos = $media->filter(fn ($m) => $m['type'] === 'video')->shuffle()->values();

@@ -45,7 +45,7 @@
         }
 
         /* ── Hide nav & page content when overlay is open ── */
-        body.cat-overlay-open .site-header,
+        body.cat-overlay-open .page-nav,
         body.cat-overlay-open .moments-page { visibility: hidden; }
         body.cat-overlay-open { overflow: hidden; }
 
@@ -406,18 +406,20 @@
                                 class="moments-masonry__item{{ $item['type'] === 'video' ? ' moments-masonry__item--video' : '' }}"
                                 data-media-type="{{ $item['type'] }}"
                                 data-media-cat="{{ $item['category'] ?? 'uncategorized' }}"
+                                data-full="{{ $item['full'] }}"
                             >
                                 @if ($item['type'] === 'video')
                                     <video
                                         class="moments-masonry__media"
-                                        src="{{ asset($item['folder'] . '/' . $item['file']) }}"
+                                        src="{{ $item['src'] }}"
+                                        @if ($item['poster']) poster="{{ $item['poster'] }}" @endif
                                         autoplay muted loop playsinline preload="metadata"
                                         aria-hidden="true"
                                     ></video>
                                 @else
                                     <img
                                         class="moments-masonry__media"
-                                        src="{{ asset($item['folder'] . '/' . $item['file']) }}"
+                                        src="{{ $item['src'] }}"
                                         alt="" loading="lazy" decoding="async"
                                     >
                                 @endif
@@ -452,6 +454,7 @@
 
         var subcats = {
             image: [
+                { label: 'Tout',               slug: 'all' },
                 { label: 'Fashion week',       slug: 'fashion-week' },
                 { label: 'Concert / Festival', slug: 'concert-festival' },
                 { label: 'Brand',              slug: 'brand' },
@@ -459,6 +462,7 @@
                 { label: 'Shoot',              slug: 'shoot' },
             ],
             video: [
+                { label: 'Tout',       slug: 'all' },
                 { label: 'Artist',     slug: 'artist' },
                 { label: 'Clip',       slug: 'clip' },
                 { label: 'Aftermovie', slug: 'aftermovie' },
@@ -605,9 +609,10 @@
             lbLieu.textContent = '—';
 
             var isVideo = item.classList.contains('moments-masonry__item--video');
-            var src = isVideo
+            // Version grand format (Cloudinary) si dispo, sinon le média de la grille
+            var src = item.dataset.full || (isVideo
                 ? item.querySelector('video').src
-                : item.querySelector('img').src;
+                : item.querySelector('img').src);
 
             if (isVideo) {
                 var v = document.createElement('video');

@@ -43,7 +43,7 @@ All route logic lives as closures in [routes/web.php](routes/web.php). There are
 ### View Structure
 - `resources/views/layouts/site.blade.php` — single master layout; all pages extend it via `@yield`
 - `resources/views/pages/` — one file per route (about, moments, actualites, merch)
-- `resources/views/partials/` — reusable fragments included into the layout (header, cursor, lang-switch, retro-theme, dark-page-head, soon-progress)
+- `resources/views/partials/` — reusable fragments included into the layout (page-nav, blog-gate, cursor, lang-switch, retro-theme, dark-page-head, soon-progress). There is no navbar: every page gets the floating `page-nav` (Retour + Menu), and the main menu lives on the homepage
 - `resources/views/welcome.blade.php` — homepage, standalone (does not use `layouts/site`)
 
 ### i18n
@@ -53,6 +53,7 @@ Two locales: `fr` (default) and `en`. Locale is stored in the session and applie
 - `public/photos/` — images shown on the **About** page (step images) and the **Moments** gallery
 - `public/videos/` — video files shown in the **Moments** gallery; `bk.mp4` is reserved as a background video and is excluded from the gallery
 - Media is discovered at request time via `Illuminate\Support\Facades\File`; no database or manifest
+- The Moments gallery also pulls media from Cloudinary (`App\Support\CloudinaryMoments`, root folders `Photo` and `Video` with optional `<category>` subfolders, cached 10 min) when `CLOUDINARY_*` env vars are set, so the site owner can add content without touching the project. Setup and owner guide: [docs/cloudinary.md](docs/cloudinary.md)
 
 ### CSS / JS
 Vanilla CSS embedded inline in Blade templates and in the layout. `resources/css/app.css` and `resources/js/app.js` are Vite entry points but hold minimal code — most styling is in the Blade files themselves. No JS framework.

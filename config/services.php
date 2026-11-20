@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Médias de la page Moments (voir App\Support\CloudinaryMoments)
+    'cloudinary' => [
+        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+        'api_key' => env('CLOUDINARY_API_KEY'),
+        'api_secret' => env('CLOUDINARY_API_SECRET'),
+        'folder' => env('CLOUDINARY_FOLDER', 'Photo,Video'), // dossiers racine, séparés par des virgules
+        'cache_ttl' => (int) env('CLOUDINARY_CACHE_TTL', 600),
+    ],
+
 ];
